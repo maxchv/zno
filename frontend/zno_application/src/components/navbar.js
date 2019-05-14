@@ -1,64 +1,43 @@
-import React, { Component } from 'react';
-import { AppBar, Toolbar, Typography, Button } from '@material-ui/core';
-// import { AccountCircle } from "@material-ui/icons";
-import './../css/navbar.css';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import { AppBar, Toolbar, Typography, Button, IconButton } from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu';
 
-class NavBar extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            user: {
-                // role: "user"
-            }
-        }
+const styles = {
+    root: {
+        flexGrow: 1,
+    },
+    grow: {
+        flexGrow: 1,
+    },
+    menuButton: {
+        marginLeft: -12,
+        marginRight: 20,
+    },
+};
 
-    }
-
-    render() {
-        let additionalMenuItems = null;
-        if (this.state && this.state.user) {
-            switch (this.state.user.role) {
-                case "admin":
-                    additionalMenuItems = <div>
-                        <Button color="inherit">
-                            Преподаватели
-                        </Button>
-                        <Button color="inherit">Тесты</Button>
-                    </div>;
-                    break;
-                case "teacher":
-                    additionalMenuItems = <div>
-                        <Button color="inherit">Пройденные Тесты</Button>
-                    </div>;
-                    break;
-                default:
-                    additionalMenuItems = <div>
-                        <Button color="inherit">Тесты</Button>
-                    </div>;
-                    break;
-
-            }
-        }
-        else {
-            additionalMenuItems =
-                <Button color="inherit">Login</Button>;
-
-        }
-
-        return (
-            <div>
-                <AppBar position='static'>
-                    <Toolbar>
-                        <Typography variant='title' color='inherit' className="title">
-                            Zno Tests
-                        </Typography>
-                        {additionalMenuItems}
-                    </Toolbar>
-                </AppBar>
-            </div>
-        );
-    }
-
+function ButtonAppBar(props) {
+    const { classes } = props;
+    return (
+        <div className={classes.root}>
+            <AppBar position="static">
+                <Toolbar>
+                    <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+                        <MenuIcon />
+                    </IconButton>
+                    <Typography variant="h6" color="inherit" className={classes.grow}>
+                        ZNO
+          </Typography>
+                    <Button color="inherit">Login</Button>
+                </Toolbar>
+            </AppBar>
+        </div>
+    );
 }
 
-export default NavBar;
+ButtonAppBar.propTypes = {
+    classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(ButtonAppBar);
