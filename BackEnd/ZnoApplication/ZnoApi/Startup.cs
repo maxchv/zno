@@ -30,6 +30,10 @@ namespace ZnoApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // FIXME: добавить подключение к mysql
+            //var mysqlConnectionString = Configuration.GetConnectionString("mysqlconnection:connectionString");
+            //services.AddDbContext<ApplicationContext>(o => o.UseMySql(connectionString));
+
             // Add DbContext
             string connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<ApplicationContext>(
