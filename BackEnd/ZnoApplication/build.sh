@@ -1,1 +1,1 @@
-docker build -t itstepdev/zno:1 .
+#docker build -t itstepdev/zno:1 .
