@@ -12,7 +12,7 @@ namespace ZnoModelLibrary.Interfaces
     public interface IGenericRepository<TEntity> where TEntity : class
     {
         // Поиск элементов, соответствующих указанному предикату
-        Task<TEntity> Find(Expression<Func<TEntity, bool>> predicate);
+        Task<IEnumerable<TEntity>> Find(Expression<Func<TEntity, bool>> predicate);
 
         // Поиск элемента по идентификатору
         Task<TEntity> FindById(object id);

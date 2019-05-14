@@ -5,9 +5,9 @@ namespace ZnoApi.Models
     public class RegisterViewModel
     {
         [Required]
-        [Display(Name = "Email")]
-        [EmailAddress]
-        public string Email { get; set; }
+        [Display(Name = "Phone number")]
+        [Phone]
+        public string Phone { get; set; }
 
         [Required]
         [Display(Name = "Password")]
@@ -19,5 +19,9 @@ namespace ZnoApi.Models
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "Passwords do not match")]
         public string ConfirmPassword { get; set; }
+
+        [Display(Name = "Email")]
+        [EmailAddress]
+        public string Email { get; set; }
     }
 }

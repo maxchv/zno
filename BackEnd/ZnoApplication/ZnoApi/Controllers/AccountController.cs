@@ -49,15 +49,15 @@ namespace ZnoApi.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.Email,
+                var result = await _signInManager.PasswordSignInAsync(model.Login,
                                                                       model.Password,
                                                                       model.RememberMe,
                                                                       lockoutOnFailure: false);
 
                 if (result.Succeeded)
                 {
-                    var appUser = _userManager.Users.SingleOrDefault(u => u.Email == model.Email);
-                    return Ok(GenerateJwtToken(model.Email, appUser));
+                    var appUser = _userManager.Users.SingleOrDefault(u => u.Email.Equals(model.Login) || u.PhoneNumber.Equals(model.Password));
+                    return Ok(GenerateJwtToken(model.Login, appUser));
                 }
             }
 
@@ -79,14 +79,18 @@ namespace ZnoApi.Controllers
             {
                 var newUser = new ApplicationUser
                 {
+                    PhoneNumber = model.Phone,
                     UserName = model.Email,
                     Email = model.Email,
-                    EmailConfirmed = true
+                    EmailConfirmed = true,
                 };
 
                 result = await _userManager.CreateAsync(newUser, model.Password);
                 if (result.Succeeded)
                 {
+                    await _roleManager.CreateRoleAsync("User");
+                    await _userManager.AddToRoleAsync(newUser, "User");
+
                     return Ok();
                 }
 
@@ -99,6 +103,18 @@ namespace ZnoApi.Controllers
                 return BadRequest(builder.ToString());
             }
 
+            return BadRequest("Invalid input parameters");
+        }
+
+        /// <summary>
+        /// Регистрация пользователя с ролью преподавателя
+        /// </summary>
+        /// <param name="model">Модель для регистрации</param>
+        /// <returns></returns>
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> RegisterAsTeacher([FromBody] RegisterViewModel model)
+        {
             return BadRequest("Invalid input parameters");
         }
 
