@@ -13,6 +13,8 @@ using System.Text;
 using ZnoApi.Models;
 using ZnoModelLibrary.EF;
 using ZnoModelLibrary.Entities;
+using ZnoModelLibrary.Implementation;
+using ZnoModelLibrary.Interfaces;
 
 namespace ZnoApi
 {
@@ -30,8 +32,13 @@ namespace ZnoApi
         {
             // Add DbContext
             string connectionString = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connectionString));
-            services.AddTransient<ApplicationRoleManager>();
+            services.AddDbContext<ApplicationContext>(
+                optionsAction: options => options.UseSqlServer(connectionString),
+                contextLifetime: ServiceLifetime.Singleton,
+                optionsLifetime: ServiceLifetime.Singleton
+            );
+            services.AddTransient<IUnitOfWork, EFUnitOfWork>();
+            services.AddScoped<ApplicationRoleManager>();
 
             // Add Identity
             services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -107,7 +114,7 @@ namespace ZnoApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public async void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -124,6 +131,8 @@ namespace ZnoApi
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API Core API");
             });
+
+            await SeedData.Initialize(app.ApplicationServices);
         }
     }
 }
