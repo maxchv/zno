@@ -1,17 +1,33 @@
-version: '3.0'
+version: '3.1'
  
 services:
   db:
-    image: mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: itstepdev
-      MYSQL_DATABASE: zno
-      MYSQL_USER: dbuser
-      MYSQL_PASSWORD: dbpassword
-    volumes:
-      - dbdata:/var/lib/mysql
-      - ./_MySQL_Init_Script:/docker-entrypoint-initdb.d
+    image: mysql:5.7
+    ports: 
+      - 3306:3306
     restart: always
+    volumes:
+      - ./data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: itstep
+  
+  adminer:
+    image: adminer
+    restart: always
+    links:
+      - db:db
+    ports:
+      - 8082:8080
+
+  phpmyadmin:
+     image: phpmyadmin/phpmyadmin
+     depends_on: 
+       - db
+     ports:
+       - 8081:80
+     environment:
+       MYSQL_ROOT_PASSWORD: itstep       
+     restart: always
 
   zno:
     depends_on:
@@ -23,4 +39,5 @@ services:
       - "8080:80"
 
 volumes:
-    dbdata:
+  dbdata:
+    driver: local
