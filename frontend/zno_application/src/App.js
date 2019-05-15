@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter, Route, Link } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 // import logo from './logo.svg';
 import './App.css';
 import NavBar from "./components/NavBar";
@@ -8,11 +8,12 @@ import About from './components/About';
 
 function App() {
 	return (
-		<BrowserRouter>
-			<NavBar/>
-			<Route path='/' component={Home} />
-			<Route path='/about' component={About} />
-		</BrowserRouter>
+		<div>
+			<NavBar />
+			<Route exact path='/' component={Home} />
+			<Route path='/Home/' component={Home} />
+			<Route path='/About/' component={About} />
+		</div>
 	);
 }
 
