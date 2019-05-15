@@ -10,14 +10,17 @@ services:
       - ./data:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: itstep
+      MYSQL_DATABASE: zno
+      MYSQL_USER: znouser
+      MYSQL_PASSWORD: znopass
   
-  adminer:
-    image: adminer
-    restart: always
-    links:
-      - db:db
-    ports:
-      - 8082:8080
+  # adminer:
+  #   image: adminer
+  #   restart: always
+  #   links:
+  #     - db:db
+  #   ports:
+  #     - 8082:8080
 
   phpmyadmin:
      image: phpmyadmin/phpmyadmin
@@ -25,8 +28,8 @@ services:
        - db
      ports:
        - 8081:80
-     environment:
-       MYSQL_ROOT_PASSWORD: itstep       
+    #  environment:
+    #    MYSQL_ROOT_PASSWORD: itstep       
      restart: always
 
   zno:
