@@ -15,6 +15,8 @@ namespace ZnoModelLibrary.Implementation
         }
 
         private UserRepository _userRepository;
+        private SubjectRepository _subjectsRepository;
+        private TestRepository _testsRepository;
 
         public UserRepository Users
         {
@@ -24,6 +26,28 @@ namespace ZnoModelLibrary.Implementation
                     _userRepository = new UserRepository(_context);
 
                 return _userRepository;
+            }
+        }
+
+        public SubjectRepository Subjects
+        {
+            get
+            {
+                if (_subjectsRepository is null)
+                    _subjectsRepository = new SubjectRepository(_context);
+
+                return _subjectsRepository;
+            }
+        }
+
+        public TestRepository Tests
+        {
+            get
+            {
+                if (_testsRepository is null)
+                    _testsRepository = new TestRepository(_context);
+
+                return _testsRepository;
             }
         }
 

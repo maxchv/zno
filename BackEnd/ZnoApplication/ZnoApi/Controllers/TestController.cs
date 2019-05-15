@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ZnoModelLibrary.Entities;
 using ZnoModelLibrary.Interfaces;
@@ -31,7 +32,15 @@ namespace ZnoApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllTests()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var test = await _unitOfWork.Tests.FindAll();
+                return Ok(test);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         /// <summary>
@@ -41,7 +50,15 @@ namespace ZnoApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllSubjects()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var allSubjects = await _unitOfWork.Subjects.FindAll();
+                return Ok(allSubjects);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         /// <summary>
@@ -51,7 +68,15 @@ namespace ZnoApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllLevelOfDifficulty()
         {
-            throw new NotImplementedException();
+            var allLevels = Enum.GetValues(typeof(AnswerType));
+            var detailsLevels = new List<DetailsAnswerType>();
+
+            foreach (var level in allLevels)
+            {
+                detailsLevels.Add(((AnswerType)level).GetDetails());
+            }
+
+            return Ok(detailsLevels);
         }
 
         /// <summary>
@@ -77,7 +102,7 @@ namespace ZnoApi.Controllers
         }
 
         /// <summary>
-        /// Удаление натстроек для теста по определенному предмету
+        /// Удаление настроек для теста по определенному предмету
         /// </summary>
         /// <param name="settingsId"></param>
         /// <returns></returns>
