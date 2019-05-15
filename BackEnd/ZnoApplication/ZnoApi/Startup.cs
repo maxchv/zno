@@ -31,16 +31,16 @@ namespace ZnoApi
         public void ConfigureServices(IServiceCollection services)
         {
             // FIXME: добавить подключение к mysql
-            //var mysqlConnectionString = Configuration.GetConnectionString("mysqlconnection:connectionString");
-            //services.AddDbContext<ApplicationContext>(o => o.UseMySql(connectionString));
+            var mysqlConnection = Configuration.GetSection("MySqlConnection:ConnectionString");
+            services.AddDbContext<ApplicationContext>(o => o.UseMySql(mysqlConnection.Value));
 
             // Add DbContext
-            string connectionString = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<ApplicationContext>(
-                optionsAction: options => options.UseSqlServer(connectionString),
-                contextLifetime: ServiceLifetime.Singleton,
-                optionsLifetime: ServiceLifetime.Singleton
-            );
+            // string connectionString = Configuration.GetConnectionString("DefaultConnection");
+            // services.AddDbContext<ApplicationContext>(
+            //     optionsAction: options => options.UseSqlServer(connectionString),
+            //     contextLifetime: ServiceLifetime.Singleton,
+            //     optionsLifetime: ServiceLifetime.Singleton
+            // );
             services.AddTransient<IUnitOfWork, EFUnitOfWork>();
             services.AddScoped<ApplicationRoleManager>();
 
