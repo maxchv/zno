@@ -23,6 +23,9 @@ namespace ZnoApi.Controllers
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
+
+
+
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ApplicationRoleManager _roleManager;
         private readonly IConfiguration _configuration;
@@ -166,6 +169,26 @@ namespace ZnoApi.Controllers
             }
 
             return BadRequest(errorText);
+        }
+
+        /// <summary>
+        /// Отправка инструкции для сброса пароля
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="callbackUrl"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgotPassword(string email, string callbackUrl)
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public object ResetPassword(string code = null)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
