@@ -23,6 +23,9 @@ namespace ZnoApi.Controllers
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
+
+
+
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ApplicationRoleManager _roleManager;
         private readonly IConfiguration _configuration;
@@ -113,8 +116,39 @@ namespace ZnoApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> RegisterAsTeacher([FromBody] RegisterViewModel model)
+        public async Task<IActionResult> RegisterAsTeacher([FromBody] TeacherRegisterViewModel model)
         {
+            IdentityResult result;
+
+            if (ModelState.IsValid)
+            {
+                var newUser = new ApplicationUser
+                {
+                    Fio = model.Fio,
+                    PhoneNumber = model.Phone,
+                    UserName = model.Email,
+                    Email = model.Email,
+                    EmailConfirmed = true,
+                };
+
+                result = await _userManager.CreateAsync(newUser, model.Password);
+                if (result.Succeeded)
+                {
+                    await _roleManager.CreateRoleAsync("Teacher");
+                    await _userManager.AddToRoleAsync(newUser, "Teacher");
+
+                    return Ok();
+                }
+
+                StringBuilder builder = new StringBuilder();
+                foreach (var error in result.Errors)
+                {
+                    builder.AppendLine($"{error.Code}: {error.Description}");
+                }
+
+                return BadRequest(builder.ToString());
+            }
+
             return BadRequest("Invalid input parameters");
         }
 
@@ -166,6 +200,26 @@ namespace ZnoApi.Controllers
             }
 
             return BadRequest(errorText);
+        }
+
+        /// <summary>
+        /// Отправка инструкции для сброса пароля
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="callbackUrl"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgotPassword(string email, string callbackUrl)
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public object ResetPassword(string code = null)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

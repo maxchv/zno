@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ZnoModelLibrary.Entities
 {
     /// <summary>
-    /// Модель "тема для тестов"
+    /// Модель "предмет"
     /// </summary>
     public class Subject
     {
