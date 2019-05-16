@@ -10,6 +10,6 @@ namespace ZnoModelLibrary.Entities
         /// <summary>
         /// Статус (в сети, не в сети, в тестировании)
         /// </summary>
-        public Status Status { get; set; }
+        //public Status Status { get; set; }
     }
 }

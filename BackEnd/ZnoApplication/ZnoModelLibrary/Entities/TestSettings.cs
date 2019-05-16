@@ -44,7 +44,7 @@ namespace ZnoModelLibrary.Entities
         /// <summary>
         /// Категорий сложности вопросов которые будут выдаваться
         /// </summary>
-        [Required]
-        public IEnumerable<AnswerType> AnswerTypes { get; set; }
+        //[Required]
+        //public IEnumerable<AnswerType> AnswerTypes { get; set; }
     }
 }
