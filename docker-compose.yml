@@ -27,9 +27,7 @@ services:
      depends_on: 
        - db
      ports:
-       - 8081:80
-    #  environment:
-    #    MYSQL_ROOT_PASSWORD: itstep       
+       - 8081:80   
      restart: always
 
   api:

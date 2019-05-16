@@ -1,1 +1,1 @@
-docker run -p 3000:80 react-docker
+docker run -p 3000:80 itstepdev/frontend

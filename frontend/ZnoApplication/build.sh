@@ -1,1 +1,1 @@
-docker build . -t react-docker
+docker build . -t itstepdev/frontend
