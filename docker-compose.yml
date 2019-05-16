@@ -35,10 +35,20 @@ services:
   api:
     depends_on:
       - db
-    image: itstepdev/zno
+    image: zno/api
     build: 
       context: $PWD/BackEnd/ZnoApplication
       dockerfile: $PWD/BackEnd/ZnoApplication/Dockerfile
     ports:
       - 8080:80
+
+  front:
+    depends_on:
+      - api
+    image: zno/frontend
+    build: 
+      context: $PWD/frontend/ZnoApplication
+      dockerfile: $PWD/frontend/ZnoApplication/Dockerfile
+    ports:
+      - 3000:80
 
