@@ -17,6 +17,6 @@ namespace ZnoParser.Models
             Tests = new List<HtmlTest>();
         }
 
-        
+
     }
 }
