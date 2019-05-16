@@ -130,9 +130,8 @@ namespace ZnoApi.Controllers
             {
                 var newUser = new ApplicationUser
                 {
-                    Fio = model.Fio,
                     PhoneNumber = model.Phone,
-                    UserName = model.Email,
+                    UserName = model.FullName,
                     Email = model.Email,
                     EmailConfirmed = true,
                 };

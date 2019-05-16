@@ -51,6 +51,11 @@ namespace ZnoModelLibrary.Implementation
 
         public async Task Update(Test entityToUpdate)
         {
+            var test = await FindById(entityToUpdate.Id);
+
+            if (test is null)
+                throw new ArgumentException("Test with the specified ID not found!!!");
+
             _context.Entry(entityToUpdate).State = EntityState.Modified;
         }
     }

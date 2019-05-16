@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage;
+using System.Threading.Tasks;
 using ZnoModelLibrary.EF;
 using ZnoModelLibrary.Interfaces;
 
@@ -17,6 +18,7 @@ namespace ZnoModelLibrary.Implementation
         private UserRepository _userRepository;
         private SubjectRepository _subjectsRepository;
         private TestRepository _testsRepository;
+        private TestSettingsRepository _testSettingsRepository;
 
         public UserRepository Users
         {
@@ -51,6 +53,17 @@ namespace ZnoModelLibrary.Implementation
             }
         }
 
+        public TestSettingsRepository TestSettings
+        {
+            get
+            {
+                if (_testSettingsRepository is null)
+                    _testSettingsRepository = new TestSettingsRepository(_context);
+
+                return _testSettingsRepository;
+            }
+        }
+
         public void BeginTransaction()
         {
             _transaction = _context.Database.BeginTransaction();
@@ -66,9 +79,9 @@ namespace ZnoModelLibrary.Implementation
             _transaction.Rollback();
         }
 
-        public void Save()
+        public async Task SaveChanges()
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

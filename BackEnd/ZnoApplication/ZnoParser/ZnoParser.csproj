@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
@@ -12,9 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="ZnoModelLibrary">
-      <HintPath>..\..\..\..\ZnoParserBykovaCmp\ZnoParser\bin\Debug\netcoreapp2.0\ZnoModelLibrary.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\ZnoModelLibrary\ZnoModelLibrary.csproj" />
   </ItemGroup>
 
 </Project>

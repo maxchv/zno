@@ -66,7 +66,7 @@ namespace ZnoApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> GetAllLevelOfDifficulty()
+        public IActionResult GetAllLevelOfDifficulty()
         {
             var allLevels = Enum.GetValues(typeof(AnswerType));
             var detailsLevels = new List<DetailsAnswerType>();
@@ -87,7 +87,21 @@ namespace ZnoApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateTestSettings(TestSettings settings)
         {
-            throw new NotImplementedException();
+            _unitOfWork.BeginTransaction();
+
+            try
+            {
+                await _unitOfWork.TestSettings.Insert(settings);
+                await _unitOfWork.SaveChanges();
+                _unitOfWork.Commit();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _unitOfWork.Rollback();
+                return BadRequest(ex.Message);
+            }
         }
 
         /// <summary>
@@ -98,7 +112,21 @@ namespace ZnoApi.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateTestSettings(TestSettings settings)
         {
-            throw new NotImplementedException();
+            _unitOfWork.BeginTransaction();
+
+            try
+            {
+                await _unitOfWork.TestSettings.Update(settings);
+                await _unitOfWork.SaveChanges();
+                _unitOfWork.Commit();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _unitOfWork.Rollback();
+                return BadRequest(ex.Message);
+            }
         }
 
         /// <summary>
@@ -109,7 +137,21 @@ namespace ZnoApi.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteTestSettings(int settingsId)
         {
-            throw new NotImplementedException();
+            _unitOfWork.BeginTransaction();
+
+            try
+            {
+                await _unitOfWork.TestSettings.Delete(settingsId);
+                await _unitOfWork.SaveChanges();
+                _unitOfWork.Commit();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _unitOfWork.Rollback();
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
