@@ -26,6 +26,10 @@ namespace ZnoApi
                 {
                     await InitializeUsers(userManager, roleManager);
                 }
+
+                ZnoParser.ZnoParser parser = new ZnoParser.ZnoParser(context);
+                // FIXME: Раскомментить когда будет полностью готов парсер
+                //parser.StartParsing();
             }
         }
 
