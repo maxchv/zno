@@ -16,5 +16,10 @@ namespace ZnoModelLibrary.EF
         {
             base.OnModelCreating(builder);
         }
+
+        public DbSet<Subject> Subjects { get; set; }
+        public DbSet<Test> Test { get; set; }
+        public DbSet<TestType> TestType { get; set; }
+        public DbSet<TestSettings> TestSettings { get; set; }
     }
 }

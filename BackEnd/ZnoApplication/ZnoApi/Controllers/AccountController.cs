@@ -11,8 +11,11 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using ZnoApi.Models;
+using ZnoApi.Services;
 using ZnoModelLibrary.Entities;
+using ZnoModelLibrary.Interfaces;
 
 namespace ZnoApi.Controllers
 {
@@ -23,22 +26,25 @@ namespace ZnoApi.Controllers
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
-
-
-
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ApplicationRoleManager _roleManager;
         private readonly IConfiguration _configuration;
+        private IUnitOfWork _unitOfWork;
+        private IEmailSender _emailSender;
 
         public AccountController(UserManager<ApplicationUser> userManager,
                                  SignInManager<ApplicationUser> signInManager,
                                  ApplicationRoleManager roleManager,
-                                 IConfiguration configuration)
+                                 IConfiguration configuration,
+                                 IUnitOfWork unitOfWork,
+                                 IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _configuration = configuration;
+            _unitOfWork = unitOfWork;
+            _emailSender = emailSender;
         }
 
         /// <summary>
@@ -124,9 +130,8 @@ namespace ZnoApi.Controllers
             {
                 var newUser = new ApplicationUser
                 {
-                    Fio = model.Fio,
                     PhoneNumber = model.Phone,
-                    UserName = model.Email,
+                    UserName = model.FullName,
                     Email = model.Email,
                     EmailConfirmed = true,
                 };
@@ -210,16 +215,58 @@ namespace ZnoApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> ForgotPassword(string email, string callbackUrl)
+        public async Task<IActionResult> ForgotPassword(string login, string callbackUrl)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var user = await _unitOfWork.Users.FindByLogin(login);
+
+                if (user is null)
+                {
+                    return BadRequest("Пользователь с указанным логином не найден!");
+                }
+
+                // Send an email with this link
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var encodedCode = HttpUtility.UrlEncode(code);
+                callbackUrl = callbackUrl.Replace("code_value", encodedCode);
+
+                await _emailSender.SendEmailAsync(user.Email, "Сброс пароля", "Для сброса пароля нажмите <a href=\"" + callbackUrl + "\">здесь</a>");
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
+        /// <summary>
+        /// Сброс пароля
+        /// </summary>
+        /// <param name="model">Модель для сброса пароля</param>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
-        public object ResetPassword(string code = null)
+        public async Task<IActionResult> ResetPassword([FromBody]ResetPasswordViewModel model)
         {
-            throw new NotImplementedException();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Inputs data is invalid!!!");
+            }
+
+            var user = await _unitOfWork.Users.FindByLogin(model.Login);
+            if (user == null)
+            {
+                return BadRequest("The user with the specified login was not found!");
+            }
+
+            var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+            if (result.Succeeded)
+            {
+                return Ok();
+            }
+
+            return BadRequest(result.Errors.ToString());
         }
 
         /// <summary>

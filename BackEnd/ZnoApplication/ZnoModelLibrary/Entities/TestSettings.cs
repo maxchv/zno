@@ -20,26 +20,31 @@ namespace ZnoModelLibrary.Entities
         /// <summary>
         /// Предмет
         /// </summary>
+        [Required]
         public Subject Subject { get; set; }
 
         /// <summary>
         /// Время тестирования в минутах
         /// </summary>
+        [Required]
         public ushort TestingTime { get; set; }
 
         /// <summary>
         /// Количество вопросов каждой категории сложности
         /// </summary>
+        [Required]
         public ushort NumberOfQuestions { get; set; }
 
         /// <summary>
         /// Список тестов из которых будут выбираться вопросы
         /// </summary>
+        [Required]
         public IEnumerable<Test> Tests { get; set; }
 
         /// <summary>
         /// Категорий сложности вопросов которые будут выдаваться
         /// </summary>
+        [Required]
         public IEnumerable<AnswerType> AnswerTypes { get; set; }
     }
 }
