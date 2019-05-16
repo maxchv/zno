@@ -288,6 +288,26 @@ namespace ZnoApi.Controllers
         }
 
         /// <summary>
+        /// Возвращает роли пользователя
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> GetRoles()
+        {
+            try
+            {
+                var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+                var userRoles = await _userManager.GetRolesAsync(currentUser);
+
+                return Ok(userRoles);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
         /// Генерация JWT токена
         /// </summary>
         /// <param name="email">Электронная почта пользователя</param>
