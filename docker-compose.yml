@@ -36,8 +36,9 @@ services:
     depends_on:
       - db
     image: itstepdev/zno
-    build:
-      context: .
+    build: 
+      context: $PWD/BackEnd/ZnoApplication
+      dockerfile: $PWD/BackEnd/ZnoApplication/Dockerfile
     ports:
       - 8080:80
 
