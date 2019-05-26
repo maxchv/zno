@@ -39,12 +39,16 @@ namespace ZnoModelLibrary.Entities
         /// Список тестов из которых будут выбираться вопросы
         /// </summary>
         [Required]
-        public IEnumerable<Test> Tests { get; set; }
+        public IList<Test> Tests { get; set; }
 
         /// <summary>
         /// Категорий сложности вопросов которые будут выдаваться
         /// </summary>
-        //[Required]
-        //public IEnumerable<AnswerType> AnswerTypes { get; set; }
+        public IList<TestSettingsAnswerType> AnswerTypes { get; set; }
+
+        public TestSettings()
+        {
+            AnswerTypes = new List<TestSettingsAnswerType>();
+        }
     }
 }

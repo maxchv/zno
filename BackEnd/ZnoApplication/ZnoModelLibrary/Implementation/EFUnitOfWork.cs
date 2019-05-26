@@ -1,16 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage;
 using System.Threading.Tasks;
-using ZnoModelLibrary.EF;
+using ZnoModelLibrary.Context;
 using ZnoModelLibrary.Interfaces;
 
 namespace ZnoModelLibrary.Implementation
 {
-    public class EFUnitOfWork : IUnitOfWork
+    public class MySqlUnitOfWork : IUnitOfWork
     {
-        private ApplicationContext _context;
+        private ApplicationDbContext _context;
         private IDbContextTransaction _transaction;
 
-        public EFUnitOfWork(ApplicationContext context)
+        public MySqlUnitOfWork(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -19,6 +19,9 @@ namespace ZnoModelLibrary.Implementation
         private SubjectRepository _subjectsRepository;
         private TestRepository _testsRepository;
         private TestSettingsRepository _testSettingsRepository;
+        private TestTypeRepository _testTypesRepository;
+        private QuestionRepository _questionRepository;
+        private AnswerTypeRepository _answerTypeRepository;
 
         public UserRepository Users
         {
@@ -61,6 +64,39 @@ namespace ZnoModelLibrary.Implementation
                     _testSettingsRepository = new TestSettingsRepository(_context);
 
                 return _testSettingsRepository;
+            }
+        }
+
+        public TestTypeRepository TestTypes
+        {
+            get
+            {
+                if (_testTypesRepository is null)
+                    _testTypesRepository = new TestTypeRepository(_context);
+
+                return _testTypesRepository;
+            }
+        }
+
+        public QuestionRepository Questions
+        {
+            get
+            {
+                if (_questionRepository is null)
+                    _questionRepository = new QuestionRepository(_context);
+
+                return _questionRepository;
+            }
+        }
+
+        public AnswerTypeRepository AnswerTypes
+        {
+            get
+            {
+                if (_answerTypeRepository is null)
+                    _answerTypeRepository = new AnswerTypeRepository(_context);
+
+                return _answerTypeRepository;
             }
         }
 

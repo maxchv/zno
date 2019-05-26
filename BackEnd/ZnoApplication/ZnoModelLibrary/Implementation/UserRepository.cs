@@ -5,7 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using ZnoModelLibrary.Abstraction;
-using ZnoModelLibrary.EF;
+using ZnoModelLibrary.Context;
 using ZnoModelLibrary.Entities;
 using ZnoModelLibrary.Interfaces;
 
@@ -13,16 +13,21 @@ namespace ZnoModelLibrary.Implementation
 {
     public class UserRepository : IGenericRepository<ApplicationUser>, IUserRepository<ApplicationUser>
     {
-        private ApplicationContext _context;
+        private ApplicationDbContext _context;
 
-        public UserRepository(ApplicationContext context)
+        public UserRepository(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public Task Delete(object id)
+        public async Task Delete(object id)
         {
-            throw new NotImplementedException();
+            var entity = await FindById(id);
+
+            if (entity is null)
+                throw new ArgumentException("User with the specified ID not found!!!");
+
+            _context.Users.Remove(entity);
         }
 
         public async Task<IEnumerable<ApplicationUser>> Find(Expression<Func<ApplicationUser, bool>> predicate)
@@ -35,9 +40,9 @@ namespace ZnoModelLibrary.Implementation
             return await _context.Users.ToListAsync();
         }
 
-        public Task<ApplicationUser> FindById(object id)
+        public async Task<ApplicationUser> FindById(object id)
         {
-            throw new NotImplementedException();
+            return await _context.Users.FirstOrDefaultAsync(t => t.Id.Equals(id.ToString()));
         }
 
         public async Task<ApplicationUser> FindByLogin(string login)
@@ -50,9 +55,14 @@ namespace ZnoModelLibrary.Implementation
             throw new NotImplementedException();
         }
 
-        public Task Update(ApplicationUser entityToUpdate)
+        public async Task Update(ApplicationUser entityToUpdate)
         {
-            throw new NotImplementedException();
+            var entity = await FindById(entityToUpdate.Id);
+
+            if (entity is null)
+                throw new ArgumentException("User with the specified ID not found!!!");
+
+            _context.Entry(entityToUpdate).State = EntityState.Modified;
         }
     }
 }

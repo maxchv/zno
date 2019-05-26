@@ -6,7 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
-using ZnoModelLibrary.EF;
+using ZnoModelLibrary.Context;
 using ZnoModelLibrary.Entities;
 using ZnoParser.Abstruction;
 

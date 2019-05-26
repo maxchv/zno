@@ -9,6 +9,9 @@ namespace ZnoModelLibrary.Interfaces
         SubjectRepository Subjects { get; }
         TestRepository Tests { get; }
         TestSettingsRepository TestSettings { get; }
+        TestTypeRepository TestTypes { get; }
+        QuestionRepository Questions { get; }
+        AnswerTypeRepository AnswerTypes { get; }
 
         void BeginTransaction();
         void Commit();

@@ -4,8 +4,9 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using ZnoApi.Models;
-using ZnoModelLibrary.EF;
+using ZnoModelLibrary.Context;
 using ZnoModelLibrary.Entities;
+using ZnoModelLibrary.Interfaces;
 
 namespace ZnoApi
 {
@@ -16,20 +17,65 @@ namespace ZnoApi
             using (var scope = serviceProvider.CreateScope())
             {
                 var provider = scope.ServiceProvider;
-                var context = provider.GetRequiredService<ApplicationContext>();
+                var context = provider.GetRequiredService<ApplicationDbContext>();
                 var userManager = provider.GetRequiredService<UserManager<ApplicationUser>>();
                 var roleManager = provider.GetRequiredService<ApplicationRoleManager>();
+                var unitOfWork = provider.GetRequiredService<IUnitOfWork>();
 
-                var userAdmin = context.Users.FirstOrDefault(u => u.Email.Equals("admin@domain.com") || u.PhoneNumber.Equals("admin@domain.com"));
-
-                if (userAdmin is null)
+                using (var transaction = context.Database.BeginTransaction())
                 {
-                    await InitializeUsers(userManager, roleManager);
+                    try
+                    {
+                        var userAdmin = context.Users.FirstOrDefault(u => u.Email.Equals("admin@domain.com") ||
+                                                                u.PhoneNumber.Equals("admin@domain.com"));
+
+                        if (userAdmin is null)
+                        {
+                            await InitializeUsers(userManager, roleManager);
+                        }
+
+                        if (!context.AnswerTypes.Any())
+                        {
+                            var oneType = new AnswerType
+                            {
+                                Name = "C одним правильным ответом"
+                            };
+
+                            var manyType = new AnswerType
+                            {
+                                Name = "C несколькими правильным ответами"
+                            };
+
+                            var manualType = new AnswerType
+                            {
+                                Name = "С ручным вводом ответа"
+                            };
+
+                            var taskType = new AnswerType
+                            {
+                                Name = "С ручным вводом ответа (с ручной проверкой преподавателем)"
+                            };
+
+                            await context.AnswerTypes.AddRangeAsync(new[]
+                            {
+                                oneType, manyType,
+                                manualType, taskType
+                            });
+
+                            await context.SaveChangesAsync();
+                        }
+
+                        transaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                    }
                 }
 
-                ZnoParser.ZnoParser parser = new ZnoParser.ZnoParser(context);
+                ZnoParser.ZnoParser parser = new ZnoParser.ZnoParser(unitOfWork);
                 // FIXME: Раскомментить когда будет полностью готов парсер
-                //parser.StartParsing();
+                //await parser.StartParsing();
             }
         }
 

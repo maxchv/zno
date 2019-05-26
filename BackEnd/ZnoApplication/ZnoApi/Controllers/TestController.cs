@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using ZnoModelLibrary.Entities;
 using ZnoModelLibrary.Interfaces;
@@ -66,17 +65,17 @@ namespace ZnoApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult GetAllLevelOfDifficulty()
+        public async Task<IActionResult> GetAllLevelOfDifficulty()
         {
-            var allLevels = Enum.GetValues(typeof(AnswerType));
-            var detailsLevels = new List<DetailsAnswerType>();
-
-            foreach (var level in allLevels)
+            try
             {
-                detailsLevels.Add(((AnswerType)level).GetDetails());
+                var types = await _unitOfWork.AnswerTypes.FindAll();
+                return Ok(types);
             }
-
-            return Ok(detailsLevels);
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         /// <summary>

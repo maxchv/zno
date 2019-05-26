@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using ZnoModelLibrary.EF;
+using ZnoModelLibrary.Context;
 using ZnoModelLibrary.Entities;
 using ZnoModelLibrary.Interfaces;
 
@@ -12,9 +12,9 @@ namespace ZnoModelLibrary.Implementation
 {
     public class TestSettingsRepository : IGenericRepository<TestSettings>
     {
-        private ApplicationContext _context;
+        private ApplicationDbContext _context;
 
-        public TestSettingsRepository(ApplicationContext context)
+        public TestSettingsRepository(ApplicationDbContext context)
         {
             _context = context;
         }
