@@ -1,0 +1,7 @@
+# 
+POST https://zno.osvita.ua/users/znotest/
+Content-Type: application/x-www-form-urlencoded
+
+do=send_all_serdata&znotest=337
+
+###

@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
+
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 
 // Material Components
+
 import { withStyles } from '@material-ui/core/styles';
 import {
     AppBar, Toolbar, Typography, Button,
     IconButton, Drawer, Divider,
     List, ListItem, ListItemIcon, ListItemText, Link
 } from '@material-ui/core';
+
 
 // Material Icons
 import MenuIcon from '@material-ui/icons/Menu';
@@ -20,6 +23,7 @@ import HomeIcon from "@material-ui/icons/HomeOutlined";
 
 // Other resources
 import { links } from "../links";
+
 
 
 const drawerWidth = 250;
@@ -104,6 +108,7 @@ class NavBar extends Component {
         const { pathname } = this.props.location;
         // console.log({pathname});
 
+
         const { classes, theme } = this.props;
         const { open } = this.state;
 
@@ -117,6 +122,7 @@ class NavBar extends Component {
             iconComponent: <InfoIcon className={classes.icon} />
         }];
 
+
         return (
             <div className={classes.root}>
                 <AppBar position="static">
@@ -126,6 +132,7 @@ class NavBar extends Component {
                             className={classNames(classes.menuButton, open && classes.hide)} color="inherit" aria-label="Menu">
                             <MenuIcon />
                         </IconButton>
+
                         <Typography variant="h6" className={classes.grow} color="inherit" >
                             <Link to={links.default} component={RouterLink} underline='none' color="inherit" >
                                 ZNO
@@ -136,6 +143,7 @@ class NavBar extends Component {
                                 Sign in / Sing up
                             </Link>
                         </Button>
+
                     </Toolbar>
                 </AppBar>
 
@@ -158,11 +166,13 @@ class NavBar extends Component {
                     </div>
                     <Divider />
                     <List>
+
                         {pages.map((page, index) => (
                             <Link underline='none' className={classes.link} key={page.text} component={RouterLink} to={page.link}>
                                 <ListItem button selected={page.link === pathname || (pathname === links.default && page.link === links.home)} >
                                     <ListItemIcon>{page.iconComponent}</ListItemIcon>
                                     <ListItemText primary={page.text} />
+
                                 </ListItem>
                             </Link>
                         ))}
