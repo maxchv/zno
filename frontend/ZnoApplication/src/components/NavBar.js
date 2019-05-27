@@ -2,25 +2,35 @@ import React, { Component } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
+import { Link as RouterLink, withRouter } from 'react-router-dom';
+
+// Material Components
+
 import { withStyles } from '@material-ui/core/styles';
 import {
     AppBar, Toolbar, Typography, Button,
     IconButton, Drawer, Divider,
     List, ListItem, ListItemIcon, ListItemText, Link
 } from '@material-ui/core';
-import { Link as RouterLink, withRouter } from 'react-router-dom';
 
+
+// Material Icons
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import InboxIcon from "@material-ui/icons/Inbox";
-import MailIcon from "@material-ui/icons/Mail";
+import InfoIcon from "@material-ui/icons/InfoOutlined";
+import HomeIcon from "@material-ui/icons/HomeOutlined";
+
+// Other resources
+import { links } from "../links";
+
 
 
 const drawerWidth = 250;
 const styles = theme => ({
     root: {
         flexGrow: 1,
+        position:'static'
     },
     grow: {
         flexGrow: 1,
@@ -66,7 +76,13 @@ const styles = theme => ({
     },
     currentLink: {
         border: '1px solid gray'
-    }
+    },
+    icon: {
+        // backgroundColor: theme.palette.secondary.main,
+        // color: '#fafafa',
+        // padding: '5px',
+        // borderRadius: '50%'
+    },
 });
 
 class NavBar extends Component {
@@ -95,6 +111,18 @@ class NavBar extends Component {
 
         const { classes, theme } = this.props;
         const { open } = this.state;
+
+        const pages = [{
+            text: 'Home',
+            link: links.home,
+            iconComponent: <HomeIcon className={classes.icon} />
+        }, {
+            text: 'About',
+            link: links.about,
+            iconComponent: <InfoIcon className={classes.icon} />
+        }];
+
+
         return (
             <div className={classes.root}>
                 <AppBar position="static">
@@ -104,10 +132,18 @@ class NavBar extends Component {
                             className={classNames(classes.menuButton, open && classes.hide)} color="inherit" aria-label="Menu">
                             <MenuIcon />
                         </IconButton>
-                        <Typography variant="h6" color="inherit" className={classes.grow}>
-                            ZNO
+
+                        <Typography variant="h6" className={classes.grow} color="inherit" >
+                            <Link to={links.default} component={RouterLink} underline='none' color="inherit" >
+                                ZNO
+                            </Link>
                         </Typography>
-                        <Button color="inherit">Login</Button>
+                        <Button color="inherit">
+                            <Link to={links.signin} component={RouterLink} underline='none' color="inherit" >
+                                Sign in / Sing up
+                            </Link>
+                        </Button>
+
                     </Toolbar>
                 </AppBar>
 
@@ -130,11 +166,13 @@ class NavBar extends Component {
                     </div>
                     <Divider />
                     <List>
-                        {['Home', 'About'].map((text, index) => (
-                            <Link underline='none' className={classes.link} key={text} component={RouterLink} to={"/" + text}>
-                                <ListItem button selected={"/" + text === pathname || (pathname === '/' && text === 'Home')} >
-                                    <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                                    <ListItemText primary={text} />
+
+                        {pages.map((page, index) => (
+                            <Link underline='none' className={classes.link} key={page.text} component={RouterLink} to={page.link}>
+                                <ListItem button selected={page.link === pathname || (pathname === links.default && page.link === links.home)} >
+                                    <ListItemIcon>{page.iconComponent}</ListItemIcon>
+                                    <ListItemText primary={page.text} />
+
                                 </ListItem>
                             </Link>
                         ))}
