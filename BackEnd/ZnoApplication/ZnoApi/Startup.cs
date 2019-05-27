@@ -11,7 +11,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using ZnoApi.Models;
-using ZnoModelLibrary.EF;
+using ZnoModelLibrary.Context;
 using ZnoModelLibrary.Entities;
 using ZnoModelLibrary.Implementation;
 using ZnoModelLibrary.Interfaces;
@@ -30,23 +30,16 @@ namespace ZnoApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // FIXME: добавить подключение к mysql
-            var mysqlConnection = Configuration.GetSection("MySqlConnection:ConnectionString");
-            services.AddDbContext<ApplicationContext>(o => o.UseMySql(mysqlConnection.Value));
-
             // Add DbContext
-            // string connectionString = Configuration.GetConnectionString("DefaultConnection");
-            // services.AddDbContext<ApplicationContext>(
-            //     optionsAction: options => options.UseSqlServer(connectionString),
-            //     contextLifetime: ServiceLifetime.Singleton,
-            //     optionsLifetime: ServiceLifetime.Singleton
-            // );
-            services.AddTransient<IUnitOfWork, EFUnitOfWork>();
+            var mysqlConnection = Configuration.GetSection("MySqlConnection:ConnectionString");
+            services.AddDbContext<ApplicationDbContext>(o => o.UseMySql(mysqlConnection.Value));
+
+            services.AddTransient<IUnitOfWork, MySqlUnitOfWork>();
             services.AddScoped<ApplicationRoleManager>();
 
             // Add Identity
             services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationContext>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
             services.Configure<IdentityOptions>(options =>

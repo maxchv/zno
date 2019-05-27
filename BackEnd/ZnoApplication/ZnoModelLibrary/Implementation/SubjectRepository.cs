@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using ZnoModelLibrary.EF;
+using ZnoModelLibrary.Context;
 using ZnoModelLibrary.Entities;
 using ZnoModelLibrary.Interfaces;
 
@@ -12,16 +12,21 @@ namespace ZnoModelLibrary.Implementation
 {
     public class SubjectRepository : IGenericRepository<Subject>
     {
-        private ApplicationContext _context;
+        private ApplicationDbContext _context;
 
-        public SubjectRepository(ApplicationContext context)
+        public SubjectRepository(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public Task Delete(object id)
+        public async Task Delete(object id)
         {
-            throw new NotImplementedException();
+            var entity = await FindById(id);
+
+            if (entity is null)
+                throw new ArgumentException("Subject with the specified ID not found!!!");
+
+            _context.Subjects.Remove(entity);
         }
 
         public async Task<IEnumerable<Subject>> Find(Expression<Func<Subject, bool>> predicate)
@@ -39,14 +44,19 @@ namespace ZnoModelLibrary.Implementation
             return await _context.Subjects.FirstOrDefaultAsync(s => s.Id == (int)id);
         }
 
-        public Task Insert(Subject entity)
+        public async Task Insert(Subject entity)
         {
-            throw new NotImplementedException();
+            await _context.Subjects.AddAsync(entity);
         }
 
-        public Task Update(Subject entityToUpdate)
+        public async Task Update(Subject entityToUpdate)
         {
-            throw new NotImplementedException();
+            var entity = await FindById(entityToUpdate.Id);
+
+            if (entity is null)
+                throw new ArgumentException("Subject with the specified ID not found!!!");
+
+            _context.Entry(entityToUpdate).State = EntityState.Modified;
         }
     }
 }

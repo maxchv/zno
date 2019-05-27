@@ -2,42 +2,47 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using ZnoModelLibrary.EF;
+using ZnoModelLibrary.Context;
 using ZnoModelLibrary.Entities;
+using ZnoModelLibrary.Implementation;
+using ZnoModelLibrary.Interfaces;
 using ZnoParser.Models;
 
 namespace ZnoParser
 {
     public class ZnoParser
     {
-        private HttpClient client;
         private const String END_POINT = "https://zno.osvita.ua/";
         private const string URL_TEST = "users/znotest/";
-        private string connString;
+        private HttpClient client;
         private IList<HtmlSubject> htmlSubjects = new List<HtmlSubject>();
-        private ApplicationContext ctx;
-
+        private IUnitOfWork _unitOfWork;
 
         public ZnoParser(string connectionString)
         {
-            this.connString = connectionString;
-
             DbContextOptionsBuilder optionsBuilder = new DbContextOptionsBuilder();
-            var options = optionsBuilder.UseSqlServer(connString).Options;
+            var options = optionsBuilder.UseSqlServer(connectionString).Options;
 
-            ctx = new ApplicationContext(options);
+            var context = new ApplicationDbContext(options);
 
+            _unitOfWork = new MySqlUnitOfWork(context);
             Initialize();
         }
 
-        public ZnoParser(ApplicationContext ctx)
+        public ZnoParser(ApplicationDbContext context)
         {
-            this.ctx = ctx;
+            _unitOfWork = new MySqlUnitOfWork(context);
+            Initialize();
+        }
+
+        public ZnoParser(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
             Initialize();
         }
 
@@ -51,48 +56,61 @@ namespace ZnoParser
             htmlSubjects.Add(new HtmlSubject("Англійська мова", "english/"));
         }
 
-        public void StartParsing()
+        public async Task StartParsing()
         {
-
-            if (!ctx.Subjects.Any())
+            var subjects = await _unitOfWork.Subjects.FindAll();
+            if (subjects.Count() <= 0)
             {
-                Subject subjectEF = null;
-                foreach (var subject in GetSubjects())
+                _unitOfWork.BeginTransaction();
+
+                try
                 {
-                    subjectEF = new Subject();
-                    subjectEF.Name = subject.Name;
-                    ctx.Subjects.Add(subjectEF);
-
-                    ctx.SaveChanges();
-
-                    foreach (var test in subject.Tests)
+                    foreach (var currentSubject in GetSubjects())
                     {
-                        if (ctx.TestTypes.FirstOrDefault(t => t.Name.Equals(test.Type)) == null)
-                        {
-                            TestType testType = new TestType();
-                            testType.Name = test.Type;
-                            ctx.TestTypes.Add(testType);
-                            ctx.SaveChanges();
-                        }
+                        var newSubject = new Subject();
+                        newSubject.Name = currentSubject.Name;
+                        await _unitOfWork.Subjects.Insert(newSubject);
 
-                        try
-                        {
-                            Test testEF = new Test();
-                            testEF.Subject = ctx.Subjects.FirstOrDefault((s) => s.Name == test.Subject);
-                            testEF.Type = ctx.TestTypes.FirstOrDefault((t) => t.Name == test.Type);
-                            testEF.Year = test.Year;
-                            ctx.Tests.Add(testEF);
-                            ctx.SaveChanges();
-                        }
-                        catch (Exception ex)
-                        {
+                        await _unitOfWork.SaveChanges();
 
-                        }
+                        foreach (var test in currentSubject.Tests)
+                        {
+                            var searchTypes = await _unitOfWork.TestTypes.Find(t => t.Name.Equals(test.Type));
 
+                            if (searchTypes is null || searchTypes.Count() <= 0)
+                            {
+                                var newTestType = new TestType();
+                                newTestType.Name = test.Type;
+                                await _unitOfWork.TestTypes.Insert(newTestType);
+                                await _unitOfWork.SaveChanges();
+                            }
+
+                            try
+                            {
+                                var newTest = new Test();
+                                newTest.Subject = (await _unitOfWork.Subjects.Find(s => s.Name == test.Subject)).FirstOrDefault();
+                                newTest.Type = (await _unitOfWork.TestTypes.Find(t => t.Name == test.Type)).FirstOrDefault();
+                                newTest.Year = test.Year;
+
+                                await _unitOfWork.Tests.Insert(newTest);
+                                await _unitOfWork.SaveChanges();
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine(ex.Message);
+                            }
+                        }
                     }
+
+                    await _unitOfWork.SaveChanges();
+                    _unitOfWork.Commit();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                    _unitOfWork.Rollback();
                 }
             }
-
         }
 
         public void AddSubject(HtmlSubject htmlSubject)

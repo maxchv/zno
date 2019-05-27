@@ -1,19 +1,35 @@
-﻿namespace ZnoModelLibrary.Entities
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ZnoModelLibrary.Entities
 {
     /// <summary>
-    /// Категория сложности вопроса
+    /// Тип вопроса
     /// </summary>
-    public enum AnswerType
+    public class AnswerType
     {
-        // Вопрос с одним правильным ответом
-        One,
-        // Вопрос с несколькими правильным ответами
-        Many,
-        // Вопрос ответ на который необходимо высчитать
-        // и вручную вписать (проверяется системой автопроверки)
-        Manual,
-        // Вопрос ответ на который необходимо высчитать 
-        // и вручную вписать (проверяется преподавателем)
-        Task
+        /// <summary>
+        /// Идентификатор
+        /// </summary>
+        [Key]
+        [Required]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        /// <summary>
+        /// Название
+        /// </summary>
+        [Required]
+        public string Name { get; set; }
+
+        [JsonIgnore]
+        public IList<TestSettingsAnswerType> TestSettings { get; set; }
+
+        public AnswerType()
+        {
+            TestSettings = new List<TestSettingsAnswerType>();
+        }
     }
 }

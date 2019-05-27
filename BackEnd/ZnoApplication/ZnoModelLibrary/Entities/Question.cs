@@ -9,21 +9,41 @@ namespace ZnoModelLibrary.Entities
     /// </summary>
     public class Question
     {
+        /// <summary>
+        /// Идентификатор
+        /// </summary>
         [Key]
         [Required]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        /// <summary>
+        /// Тип вопроса
+        /// </summary>
         [Required]
         public AnswerType AnswerType { get; set; }
 
+        /// <summary>
+        /// Тест к которому относиться данный вопрос
+        /// </summary>
         [Required]
         public Test Test { get; set; }
 
+        /// <summary>
+        /// Ответ в формате JSON
+        /// </summary>
         [Required]
         public string AnswerJson { get; set; }
 
+        /// <summary>
+        /// Содержимое вопроса
+        /// </summary>
         [Required]
-        public List<Content> Contents { get; set; }
+        public IList<QuestionContent> Contents { get; set; }
+
+        public Question()
+        {
+            Contents = new List<QuestionContent>();
+        }
     }
 }
