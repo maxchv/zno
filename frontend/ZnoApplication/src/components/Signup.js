@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from "react-router-dom";
+import { Prompt } from "react-router";
 
 import {
     Avatar, Button, CssBaseline, Paper, Typography,
-    FormControl, Input, InputLabel,
-    Link,
+    // FormControl, Input, InputLabel,
+    Link, LinearProgress
 } from '@material-ui/core';
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 
@@ -54,30 +55,50 @@ class SignUp extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            phone: '',
-            password: '',
-            confirmPassword: '',
-            email: '',
+            signupUser: {
+                phone: '',
+                password: '',
+                confirmPassword: '',
+                email: '',
+            }
         }
 
+        this.shouldBlockNavigation = false;
 
         this.handleSubmit = this.handleSubmit.bind(this);
+
+        // custom rule will have name 'isPasswordMatch'
+        ValidatorForm.addValidationRule('isPasswordMatch', (value) => {
+            return value === this.state.signupUser.password;
+        });
+
+    }
+
+    handleChange = (event) => {
+        const { signupUser } = this.state;
+        signupUser[event.target.name] = event.target.value;
+        this.setState({ signupUser });
+
+        this.shouldBlockNavigation = signupUser.phone !== '' || signupUser.password !== '';
     }
 
     handleSubmit() {
         // your submit logic
-        // console.log(this);
-
+        console.log("Submit");
+        console.log(this.state.signupUser);
     }
 
     render() {
 
         const { classes } = this.props;
-        const { phone, password, confirmPassword, email } = this.state;
+        const { signupUser } = this.state;
 
         return (
             <main className={classes.main}>
                 <CssBaseline />
+                <Prompt
+                    when={this.shouldBlockNavigation}
+                    message='You have unsaved changes, are you sure you want to leave?' />
                 <Paper className={classes.paper}>
                     <Avatar className={classes.avatar}>
                         <LockOutlinedIcon />
@@ -94,28 +115,71 @@ class SignUp extends Component {
                         </FormControl> 
                         */}
                         <TextValidator
+                            margin="normal"
                             required
                             fullWidth
                             label='Phone'
                             name='phone'
-                            value={phone}
-                            validators={['required']}
+                            autoComplete='tel'
+                            onChange={this.handleChange}
+                            value={signupUser.phone}
+                            validators={['required', 'matchRegexp:^\\+?(38)?(0\\d{9})$']}
+                            errorMessages={['Phone is required', 'Phone must be like 0123456789 or +380123456789']}
                         />
 
-                        <FormControl margin="normal" required fullWidth>
+                        {/* <FormControl margin="normal" required fullWidth>
                             <InputLabel htmlFor="password">Password</InputLabel>
-                            <Input name="password" type="password" id="password" autoComplete="current-password" />
-                        </FormControl>
-
+                            <Input name="password" type="password" id="password" autoComplete="new-password" />
+                        </FormControl> */}
+                        <TextValidator
+                            margin="normal"
+                            autoComplete="new-password"
+                            required
+                            fullWidth
+                            label='Password'
+                            name='password'
+                            type='password'
+                            onChange={this.handleChange}
+                            value={signupUser.password}
+                            validators={['required']}
+                            errorMessages={['Password is required']}
+                        />
+                        {/* 
                         <FormControl margin="normal" required fullWidth>
                             <InputLabel htmlFor="confirmPassword">Confirm Password</InputLabel>
-                            <Input name="confirmPassword" type="password" id="confirmPassword" autoComplete="current-password" />
-                        </FormControl>
+                            <Input name="confirmPassword" type="password" id="confirmPassword" autoComplete="new-password" />
+                        </FormControl> */}
 
-                        <FormControl margin="normal" fullWidth>
+                        <TextValidator
+                            margin="normal"
+                            autoComplete="new-password"
+                            required
+                            fullWidth
+                            label='Confirm Password'
+                            name='confirmPassword'
+                            type='password'
+                            onChange={this.handleChange}
+                            value={signupUser.confirmPassword}
+                            validators={['isPasswordMatch', 'required']}
+                            errorMessages={['Password mismatch', 'This field is required']}
+                        />
+
+                        {/* <FormControl margin="normal" fullWidth>
                             <InputLabel htmlFor="email">Email</InputLabel>
-                            <Input name="email" type="email" id="email" autoComplete="current-password" />
-                        </FormControl>
+                            <Input name="email" type="email" id="email" />
+                        </FormControl> */}
+
+                        <TextValidator
+                            margin="normal"
+                            autoComplete="email"
+                            fullWidth
+                            label='Email'
+                            name='email'
+                            validators={['isEmail']}
+                            errorMessages={['Email is not valid']}
+                            value={signupUser.email}
+                            onChange={this.handleChange}
+                        />
 
                         <Button
                             type="submit"
@@ -129,6 +193,7 @@ class SignUp extends Component {
 
 
                     </ValidatorForm>
+                    {/* <LinearProgress size={24}/> */}
                     <Link className={classes.link} color='secondary' component={RouterLink} to={links.signin}>Sign in</Link>
                 </Paper>
             </main >
