@@ -6,7 +6,7 @@ namespace Zno.Server.Models
     {
         [Required]
         [Display(Name = "Phone number")]
-        [Phone]
+        [RegularExpression(@"^\+?(38)?(0\d{9})")]
         public string Phone { get; set; }
 
         [Required]

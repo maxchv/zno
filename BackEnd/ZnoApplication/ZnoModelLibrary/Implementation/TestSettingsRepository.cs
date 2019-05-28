@@ -31,17 +31,30 @@ namespace Zno.DAL.Implementation
 
         public async Task<IEnumerable<TestSettings>> Find(Expression<Func<TestSettings, bool>> predicate)
         {
-            return await _context.TestSettings.Where(predicate).ToListAsync();
+            return await _context.TestSettings
+                .Include(t => t.Subject)
+                .Include(t => t.Tests)
+                .Include(t => t.QuestionTypes)
+                .Where(predicate)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<TestSettings>> FindAll()
         {
-            return await _context.TestSettings.ToListAsync();
+            return await _context.TestSettings
+                .Include(t => t.Subject)
+                .Include(t => t.Tests)
+                .Include(t => t.QuestionTypes)
+                .ToListAsync();
         }
 
         public async Task<TestSettings> FindById(object id)
         {
-            return await _context.TestSettings.FirstOrDefaultAsync(t => t.Id == (int)id);
+            return await _context.TestSettings
+                .Include(t => t.Subject)
+                .Include(t => t.Tests)
+                .Include(t => t.QuestionTypes)
+                .FirstOrDefaultAsync(t => t.Id == (int)id);
         }
 
         public async Task Insert(TestSettings entity)
@@ -75,7 +88,33 @@ namespace Zno.DAL.Implementation
             if (entity is null)
                 throw new ArgumentException("Settings with the specified ID not found!!!");
 
-            _context.Entry(entityToUpdate).State = EntityState.Modified;
+            entity.NumberOfQuestions = entityToUpdate.NumberOfQuestions;
+            entity.TestingTime = entityToUpdate.TestingTime;
+
+            var subject = await _context.Subjects.FirstOrDefaultAsync(s => s.Id == entity.Subject.Id);
+            entity.Subject = subject;
+
+            entity.Tests.Clear();
+
+            foreach (var rawTest in entityToUpdate.Tests)
+            {
+                var test = await _context.Tests.FirstOrDefaultAsync(t => t.Id == rawTest.Id);
+                entity.Tests.Add(test);
+            }
+
+            entity.QuestionTypes.Clear();
+
+            foreach (var questionType in entityToUpdate.QuestionTypes)
+            {
+                questionType.TestSettings = entity;
+                questionType.TestSettingsId = entity.Id;
+
+                entity.QuestionTypes.Add(questionType);
+            }
+
+            //await _context.TestSettings.AddAsync(entity);
+
+            //_context.Entry(entityToUpdate).State = EntityState.Modified;
         }
     }
 }

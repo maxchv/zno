@@ -109,7 +109,7 @@ namespace Zno.Server.Controllers
         /// <param name="settings"></param>
         /// <returns></returns>
         [HttpPut]
-        public async Task<IActionResult> UpdateTestSettings(TestSettings settings)
+        public async Task<IActionResult> UpdateTestSettings([FromBody]TestSettings settings)
         {
             _unitOfWork.BeginTransaction();
 
