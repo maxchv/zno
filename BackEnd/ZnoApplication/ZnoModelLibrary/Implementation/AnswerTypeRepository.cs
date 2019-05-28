@@ -4,17 +4,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using ZnoModelLibrary.Context;
-using ZnoModelLibrary.Entities;
-using ZnoModelLibrary.Interfaces;
+using Zno.DAL.Context;
+using Zno.DAL.Entities;
+using Zno.DAL.Interfaces;
 
-namespace ZnoModelLibrary.Implementation
+namespace Zno.DAL.Implementation
 {
-    public class AnswerTypeRepository : IGenericRepository<AnswerType>
+    public class QuestionTypeRepository : IGenericRepository<QuestionType>
     {
         private ApplicationDbContext _context;
 
-        public AnswerTypeRepository(ApplicationDbContext context)
+        public QuestionTypeRepository(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -26,30 +26,30 @@ namespace ZnoModelLibrary.Implementation
             if (entity is null)
                 throw new ArgumentException("Answer Type with the specified ID not found!!!");
 
-            _context.AnswerTypes.Remove(entity);
+            _context.QuestionTypes.Remove(entity);
         }
 
-        public async Task<IEnumerable<AnswerType>> Find(Expression<Func<AnswerType, bool>> predicate)
+        public async Task<IEnumerable<QuestionType>> Find(Expression<Func<QuestionType, bool>> predicate)
         {
-            return await _context.AnswerTypes.Where(predicate).ToListAsync();
+            return await _context.QuestionTypes.Where(predicate).ToListAsync();
         }
 
-        public async Task<IEnumerable<AnswerType>> FindAll()
+        public async Task<IEnumerable<QuestionType>> FindAll()
         {
-            return await _context.AnswerTypes.ToListAsync();
+            return await _context.QuestionTypes.ToListAsync();
         }
 
-        public async Task<AnswerType> FindById(object id)
+        public async Task<QuestionType> FindById(object id)
         {
-            return await _context.AnswerTypes.FirstOrDefaultAsync(s => s.Id == (int)id);
+            return await _context.QuestionTypes.FirstOrDefaultAsync(s => s.Id == (int)id);
         }
 
-        public async Task Insert(AnswerType entity)
+        public async Task Insert(QuestionType entity)
         {
-            await _context.AnswerTypes.AddAsync(entity);
+            await _context.QuestionTypes.AddAsync(entity);
         }
 
-        public async Task Update(AnswerType entityToUpdate)
+        public async Task Update(QuestionType entityToUpdate)
         {
             var entity = await FindById(entityToUpdate.Id);
 

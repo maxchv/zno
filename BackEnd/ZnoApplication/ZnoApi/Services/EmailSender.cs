@@ -2,7 +2,7 @@
 using System.Net.Mail;
 using System.Threading.Tasks;
 
-namespace ZnoApi.Services
+namespace Zno.Server.Services
 {
     public class EmailSender : IEmailSender
     {

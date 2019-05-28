@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using ZnoModelLibrary.Context;
-using ZnoModelLibrary.Entities;
-using ZnoModelLibrary.Interfaces;
+using Zno.DAL.Context;
+using Zno.DAL.Entities;
+using Zno.DAL.Interfaces;
 
-namespace ZnoModelLibrary.Implementation
+namespace Zno.DAL.Implementation
 {
     public class TestRepository : IGenericRepository<Test>
     {
@@ -31,17 +31,26 @@ namespace ZnoModelLibrary.Implementation
 
         public async Task<IEnumerable<Test>> Find(Expression<Func<Test, bool>> predicate)
         {
-            return await _context.Tests.Where(predicate).ToListAsync();
+            return await _context.Tests
+                .Include(t => t.Type)
+                .Include(t => t.Subject)
+                .Where(predicate).ToListAsync();
         }
 
         public async Task<IEnumerable<Test>> FindAll()
         {
-            return await _context.Tests.ToListAsync();
+            return await _context.Tests
+                .Include(t => t.Type)
+                .Include(t => t.Subject)
+                .ToListAsync();
         }
 
         public async Task<Test> FindById(object id)
         {
-            return await _context.Tests.FirstOrDefaultAsync(t => t.Id == (int)id);
+            return await _context.Tests
+                .Include(t => t.Type)
+                .Include(t => t.Subject)
+                .FirstOrDefaultAsync(t => t.Id == (int)id);
         }
 
         public async Task Insert(Test entity)

@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace ZnoApi.Models
+namespace Zno.Server.Models
 {
     public class ApplicationRoleManager
     {

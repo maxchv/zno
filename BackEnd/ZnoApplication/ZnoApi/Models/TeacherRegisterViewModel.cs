@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ZnoApi.Models
+namespace Zno.Server.Models
 {
     public class TeacherRegisterViewModel : RegisterViewModel
     {

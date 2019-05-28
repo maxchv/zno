@@ -3,12 +3,12 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using ZnoApi.Models;
-using ZnoModelLibrary.Context;
-using ZnoModelLibrary.Entities;
-using ZnoModelLibrary.Interfaces;
+using Zno.Server.Models;
+using Zno.DAL.Context;
+using Zno.DAL.Entities;
+using Zno.DAL.Interfaces;
 
-namespace ZnoApi
+namespace Zno.Server
 {
     public class SeedData
     {
@@ -34,29 +34,29 @@ namespace ZnoApi
                             await InitializeUsers(userManager, roleManager);
                         }
 
-                        if (!context.AnswerTypes.Any())
+                        if (!context.QuestionTypes.Any())
                         {
-                            var oneType = new AnswerType
+                            var oneType = new QuestionType
                             {
                                 Name = "C одним правильным ответом"
                             };
 
-                            var manyType = new AnswerType
+                            var manyType = new QuestionType
                             {
                                 Name = "C несколькими правильным ответами"
                             };
 
-                            var manualType = new AnswerType
+                            var manualType = new QuestionType
                             {
                                 Name = "С ручным вводом ответа"
                             };
 
-                            var taskType = new AnswerType
+                            var taskType = new QuestionType
                             {
                                 Name = "С ручным вводом ответа (с ручной проверкой преподавателем)"
                             };
 
-                            await context.AnswerTypes.AddRangeAsync(new[]
+                            await context.QuestionTypes.AddRangeAsync(new[]
                             {
                                 oneType, manyType,
                                 manualType, taskType
@@ -73,9 +73,9 @@ namespace ZnoApi
                     }
                 }
 
-                ZnoParser.ZnoParser parser = new ZnoParser.ZnoParser(unitOfWork);
+                Zno.Parser.ZnoParser parser = new Zno.Parser.ZnoParser(unitOfWork);
                 // FIXME: Раскомментить когда будет полностью готов парсер
-                //await parser.StartParsing();
+                await parser.StartParsing();
             }
         }
 

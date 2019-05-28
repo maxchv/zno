@@ -6,11 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ZnoModelLibrary.Entities;
-using ZnoModelLibrary.Implementation;
-using ZnoModelLibrary.Interfaces;
 
-namespace ZnoApi.Controllers
+using Zno.DAL.Entities;
+using Zno.DAL.Interfaces;
+
+
+namespace Zno.Server.Controllers
 {
     /// <summary>
     /// Контроллер тестирования

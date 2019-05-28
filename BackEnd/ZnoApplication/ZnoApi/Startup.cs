@@ -10,13 +10,14 @@ using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-using ZnoApi.Models;
-using ZnoModelLibrary.Context;
-using ZnoModelLibrary.Entities;
-using ZnoModelLibrary.Implementation;
-using ZnoModelLibrary.Interfaces;
+using Zno.Server.Models;
+using Zno.Server.Services;
+using Zno.DAL.Context;
+using Zno.DAL.Entities;
+using Zno.DAL.Implementation;
+using Zno.DAL.Interfaces;
 
-namespace ZnoApi
+namespace Zno.Server
 {
     public class Startup
     {
@@ -37,6 +38,8 @@ namespace ZnoApi
             services.AddTransient<IUnitOfWork, MySqlUnitOfWork>();
             services.AddScoped<ApplicationRoleManager>();
 
+            services.AddTransient<IEmailSender, EmailSender>();
+
             // Add Identity
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -54,6 +57,8 @@ namespace ZnoApi
 
                 // User settings
                 options.User.RequireUniqueEmail = true;
+                // Добавляем поддержку всех символов в поле UserName у пользователя
+                options.User.AllowedUserNameCharacters = null;
             });
 
             // Add Jwt Authentication

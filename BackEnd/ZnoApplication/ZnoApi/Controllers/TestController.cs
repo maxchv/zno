@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
-using ZnoModelLibrary.Entities;
-using ZnoModelLibrary.Interfaces;
+using Zno.DAL.Entities;
+using Zno.DAL.Interfaces;
 
-namespace ZnoApi.Controllers
+namespace Zno.Server.Controllers
 {
     /// <summary>
     /// Контроллер для работы с тестом и его настройками
@@ -69,7 +69,7 @@ namespace ZnoApi.Controllers
         {
             try
             {
-                var types = await _unitOfWork.AnswerTypes.FindAll();
+                var types = await _unitOfWork.QuestionTypes.FindAll();
                 return Ok(types);
             }
             catch (Exception ex)
@@ -84,7 +84,7 @@ namespace ZnoApi.Controllers
         /// <param name="settings"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> CreateTestSettings(TestSettings settings)
+        public async Task<IActionResult> CreateTestSettings([FromBody]TestSettings settings)
         {
             _unitOfWork.BeginTransaction();
 

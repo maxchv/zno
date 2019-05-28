@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace ZnoModelLibrary.Interfaces
+namespace Zno.DAL.Interfaces
 {
     /// <summary>
     /// Обобщенный репозиторий
