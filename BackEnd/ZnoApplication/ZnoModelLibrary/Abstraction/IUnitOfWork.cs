@@ -1,21 +1,21 @@
-﻿using ZnoModelLibrary.Implementation;
+﻿using System.Threading.Tasks;
+using ZnoModelLibrary.Implementation;
 
 namespace ZnoModelLibrary.Interfaces
 {
     public interface IUnitOfWork
     {
         UserRepository Users { get; }
+        SubjectRepository Subjects { get; }
         TestRepository Tests { get; }
         TestSettingsRepository TestSettings { get; }
-        QuestionRepository Questions { get; }
-        GeneratedTestRepository GeneratedTests { get; }
-        SubjectRepository Subjects { get; }
         TestTypeRepository TestTypes { get; }
-        UserAnswerRepository UserAnswers { get; }
+        QuestionRepository Questions { get; }
+        AnswerTypeRepository AnswerTypes { get; }
 
         void BeginTransaction();
         void Commit();
         void Rollback();
-        void Save();
+        Task SaveChanges();
     }
 }

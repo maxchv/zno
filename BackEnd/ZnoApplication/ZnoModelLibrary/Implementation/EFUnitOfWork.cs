@@ -1,27 +1,27 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage;
-using ZnoModelLibrary.EF;
+using System.Threading.Tasks;
+using ZnoModelLibrary.Context;
 using ZnoModelLibrary.Interfaces;
 
 namespace ZnoModelLibrary.Implementation
 {
-    public class EFUnitOfWork : IUnitOfWork
+    public class MySqlUnitOfWork : IUnitOfWork
     {
-        private ApplicationContext _context;
+        private ApplicationDbContext _context;
         private IDbContextTransaction _transaction;
 
-        public EFUnitOfWork(ApplicationContext context)
+        public MySqlUnitOfWork(ApplicationDbContext context)
         {
             _context = context;
         }
 
         private UserRepository _userRepository;
-        private TestRepository _testRepository;
+        private SubjectRepository _subjectsRepository;
+        private TestRepository _testsRepository;
         private TestSettingsRepository _testSettingsRepository;
+        private TestTypeRepository _testTypesRepository;
         private QuestionRepository _questionRepository;
-        private GeneratedTestRepository _generatedTestRepository;
-        private SubjectRepository _subjectRepository;
-        private TestTypeRepository _testTypeRepository;
-        private UserAnswerRepository _userAnswerRepository;
+        private AnswerTypeRepository _answerTypeRepository;
 
         public UserRepository Users
         {
@@ -34,25 +34,25 @@ namespace ZnoModelLibrary.Implementation
             }
         }
 
+        public SubjectRepository Subjects
+        {
+            get
+            {
+                if (_subjectsRepository is null)
+                    _subjectsRepository = new SubjectRepository(_context);
+
+                return _subjectsRepository;
+            }
+        }
+
         public TestRepository Tests
         {
             get
             {
-                if (_testRepository is null)
-                    _testRepository = new TestRepository(_context);
+                if (_testsRepository is null)
+                    _testsRepository = new TestRepository(_context);
 
-                return _testRepository;
-            }
-        }
-
-        public QuestionRepository Questions
-        {
-            get
-            {
-                if (_questionRepository is null)
-                    _questionRepository = new QuestionRepository(_context);
-
-                return _questionRepository;
+                return _testsRepository;
             }
         }
 
@@ -67,47 +67,36 @@ namespace ZnoModelLibrary.Implementation
             }
         }
 
-        public GeneratedTestRepository GeneratedTests
-        {
-            get
-            {
-                if (_generatedTestRepository is null)
-                    _generatedTestRepository = new GeneratedTestRepository(_context);
-
-                return _generatedTestRepository;
-            }
-        }
-
-        public SubjectRepository Subjects
-        {
-            get
-            {
-                if (_subjectRepository is null)
-                    _subjectRepository = new SubjectRepository(_context);
-
-                return _subjectRepository;
-            }
-        }
-
         public TestTypeRepository TestTypes
         {
             get
             {
-                if (_testTypeRepository is null)
-                    _testTypeRepository = new TestTypeRepository(_context);
+                if (_testTypesRepository is null)
+                    _testTypesRepository = new TestTypeRepository(_context);
 
-                return _testTypeRepository;
+                return _testTypesRepository;
             }
         }
 
-        public UserAnswerRepository UserAnswers
+        public QuestionRepository Questions
         {
             get
             {
-                if (_userAnswerRepository is null)
-                    _userAnswerRepository = new UserAnswerRepository(_context);
+                if (_questionRepository is null)
+                    _questionRepository = new QuestionRepository(_context);
 
-                return _userAnswerRepository;
+                return _questionRepository;
+            }
+        }
+
+        public AnswerTypeRepository AnswerTypes
+        {
+            get
+            {
+                if (_answerTypeRepository is null)
+                    _answerTypeRepository = new AnswerTypeRepository(_context);
+
+                return _answerTypeRepository;
             }
         }
 
@@ -126,9 +115,9 @@ namespace ZnoModelLibrary.Implementation
             _transaction.Rollback();
         }
 
-        public void Save()
+        public async Task SaveChanges()
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

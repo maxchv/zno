@@ -27,21 +27,37 @@ namespace ZnoApi.Controllers
         /// <summary>
         /// Получение списка всех тестов
         /// </summary>
-        /// <returns>Список всех тестов</returns>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetAllTests()
         {
-            return Ok(await _unitOfWork.Tests.FindAll());
+            try
+            {
+                var test = await _unitOfWork.Tests.FindAll();
+                return Ok(test);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         /// <summary>
         /// Получение списка всех предметов
         /// </summary>
-        /// <returns>Список всех предметов</returns>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetAllSubjects()
         {
-            return Ok(await _unitOfWork.Subjects.FindAll());
+            try
+            {
+                var allSubjects = await _unitOfWork.Subjects.FindAll();
+                return Ok(allSubjects);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         /// <summary>
@@ -51,23 +67,33 @@ namespace ZnoApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllLevelOfDifficulty()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var types = await _unitOfWork.AnswerTypes.FindAll();
+                return Ok(types);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         /// <summary>
         /// Создание настроек для теста по определенному предмету
         /// </summary>
-        /// <param name="settings">Настройки теста</param>
+        /// <param name="settings"></param>
         /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> CreateTestSettings(TestSettings settings)
         {
             _unitOfWork.BeginTransaction();
+
             try
             {
                 await _unitOfWork.TestSettings.Insert(settings);
-                _unitOfWork.Save();
+                await _unitOfWork.SaveChanges();
                 _unitOfWork.Commit();
+
                 return Ok();
             }
             catch (Exception ex)
@@ -80,17 +106,19 @@ namespace ZnoApi.Controllers
         /// <summary>
         /// Обновление настроек для теста по определенному предмету
         /// </summary>
-        /// <param name="settings">Настройки теста</param>
+        /// <param name="settings"></param>
         /// <returns></returns>
         [HttpPut]
         public async Task<IActionResult> UpdateTestSettings(TestSettings settings)
         {
             _unitOfWork.BeginTransaction();
+
             try
             {
-                await _unitOfWork.TestSettings.Insert(settings);
-                _unitOfWork.Save();
+                await _unitOfWork.TestSettings.Update(settings);
+                await _unitOfWork.SaveChanges();
                 _unitOfWork.Commit();
+
                 return Ok();
             }
             catch (Exception ex)
@@ -103,30 +131,25 @@ namespace ZnoApi.Controllers
         /// <summary>
         /// Удаление настроек для теста по определенному предмету
         /// </summary>
-        /// <param name="settingsId">Идентификатор настроек теста</param>
+        /// <param name="settingsId"></param>
         /// <returns></returns>
         [HttpDelete]
         public async Task<IActionResult> DeleteTestSettings(int settingsId)
         {
-            var settings = _unitOfWork.TestSettings.FindById(settingsId);
-            if (settings != null)
+            _unitOfWork.BeginTransaction();
+
+            try
             {
-                _unitOfWork.BeginTransaction();
-                try
-                {
-                    await _unitOfWork.TestSettings.Delete(settings.Id);
-                    _unitOfWork.Save();
-                    _unitOfWork.Commit();
-                    return Ok();
-                }catch(Exception ex)
-                {
-                    _unitOfWork.Rollback();
-                    return BadRequest(ex.Message);
-                }
+                await _unitOfWork.TestSettings.Delete(settingsId);
+                await _unitOfWork.SaveChanges();
+                _unitOfWork.Commit();
+
+                return Ok();
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest("TestSettings is not found.");
+                _unitOfWork.Rollback();
+                return BadRequest(ex.Message);
             }
         }
     }

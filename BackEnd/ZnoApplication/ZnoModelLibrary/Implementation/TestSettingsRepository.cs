@@ -3,9 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
-using ZnoModelLibrary.EF;
+using ZnoModelLibrary.Context;
 using ZnoModelLibrary.Entities;
 using ZnoModelLibrary.Interfaces;
 
@@ -13,16 +12,21 @@ namespace ZnoModelLibrary.Implementation
 {
     public class TestSettingsRepository : IGenericRepository<TestSettings>
     {
-        private ApplicationContext _context;
+        private ApplicationDbContext _context;
 
-        public TestSettingsRepository(ApplicationContext applicationContext)
+        public TestSettingsRepository(ApplicationDbContext context)
         {
-            this._context = applicationContext;
+            _context = context;
         }
 
-        public Task Delete(int id)
+        public async Task Delete(object id)
         {
-            throw new NotImplementedException();
+            var entity = await FindById(id);
+
+            if (entity is null)
+                throw new ArgumentException("Settings with the specified ID not found!!!");
+
+            _context.TestSettings.Remove(entity);
         }
 
         public async Task<IEnumerable<TestSettings>> Find(Expression<Func<TestSettings, bool>> predicate)
@@ -35,19 +39,24 @@ namespace ZnoModelLibrary.Implementation
             return await _context.TestSettings.ToListAsync();
         }
 
-        public async Task<TestSettings> FindById(int id)
+        public async Task<TestSettings> FindById(object id)
         {
-            return await _context.TestSettings.Where(t => t.Id == id).FirstOrDefaultAsync();
+            return await _context.TestSettings.FirstOrDefaultAsync(t => t.Id == (int)id);
         }
 
-        public Task Insert(TestSettings entity)
+        public async Task Insert(TestSettings entity)
         {
-            throw new NotImplementedException();
+            await _context.TestSettings.AddAsync(entity);
         }
 
-        public Task Update(TestSettings entityToUpdate)
+        public async Task Update(TestSettings entityToUpdate)
         {
-            throw new NotImplementedException();
+            var entity = await FindById(entityToUpdate.Id);
+
+            if (entity is null)
+                throw new ArgumentException("Settings with the specified ID not found!!!");
+
+            _context.Entry(entityToUpdate).State = EntityState.Modified;
         }
     }
 }

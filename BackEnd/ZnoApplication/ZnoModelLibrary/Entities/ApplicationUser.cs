@@ -2,9 +2,14 @@
 
 namespace ZnoModelLibrary.Entities
 {
-    // Add profile data for application users by adding properties to the ApplicationUser class
+    /// <summary>
+    ///  Модель "пользователь"
+    /// </summary>
     public class ApplicationUser : IdentityUser
     {
-        public string Fio { get; set; }
+        /// <summary>
+        /// Статус (в сети, не в сети, в тестировании)
+        /// </summary>
+        public Status Status { get; set; }
     }
 }

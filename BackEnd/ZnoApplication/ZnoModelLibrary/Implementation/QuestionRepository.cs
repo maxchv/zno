@@ -3,9 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
-using ZnoModelLibrary.EF;
+using ZnoModelLibrary.Context;
 using ZnoModelLibrary.Entities;
 using ZnoModelLibrary.Interfaces;
 
@@ -13,16 +12,21 @@ namespace ZnoModelLibrary.Implementation
 {
     public class QuestionRepository : IGenericRepository<Question>
     {
-        private ApplicationContext _context;
+        private ApplicationDbContext _context;
 
-        public QuestionRepository(ApplicationContext applicationContext)
+        public QuestionRepository(ApplicationDbContext context)
         {
-            this._context = applicationContext;
+            _context = context;
         }
 
-        public Task Delete(int id)
+        public async Task Delete(object id)
         {
-            throw new NotImplementedException();
+            var entity = await FindById(id);
+
+            if (entity is null)
+                throw new ArgumentException("Question with the specified ID not found!!!");
+
+            _context.Questions.Remove(entity);
         }
 
         public async Task<IEnumerable<Question>> Find(Expression<Func<Question, bool>> predicate)
@@ -35,19 +39,24 @@ namespace ZnoModelLibrary.Implementation
             return await _context.Questions.ToListAsync();
         }
 
-        public async Task<Question> FindById(int id)
+        public async Task<Question> FindById(object id)
         {
-            return await _context.Questions.Where(t => t.Id == id).FirstOrDefaultAsync();
+            return await _context.Questions.FirstOrDefaultAsync(t => t.Id == (int)id);
         }
 
-        public Task Insert(Question entity)
+        public async Task Insert(Question entity)
         {
-            throw new NotImplementedException();
+            await _context.Questions.AddAsync(entity);
         }
 
-        public Task Update(Question entityToUpdate)
+        public async Task Update(Question entityToUpdate)
         {
-            throw new NotImplementedException();
+            var entity = await FindById(entityToUpdate.Id);
+
+            if (entity is null)
+                throw new ArgumentException("Question with the specified ID not found!!!");
+
+            _context.Entry(entityToUpdate).State = EntityState.Modified;
         }
     }
 }

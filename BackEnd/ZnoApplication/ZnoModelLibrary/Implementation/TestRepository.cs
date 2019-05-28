@@ -3,9 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
-using ZnoModelLibrary.EF;
+using ZnoModelLibrary.Context;
 using ZnoModelLibrary.Entities;
 using ZnoModelLibrary.Interfaces;
 
@@ -13,16 +12,21 @@ namespace ZnoModelLibrary.Implementation
 {
     public class TestRepository : IGenericRepository<Test>
     {
-        private ApplicationContext _context;
+        private ApplicationDbContext _context;
 
-        public TestRepository(ApplicationContext applicationContext)
+        public TestRepository(ApplicationDbContext context)
         {
-            this._context = applicationContext;
+            _context = context;
         }
 
-        public Task Delete(int id)
+        public async Task Delete(object id)
         {
-            throw new NotImplementedException();
+            var entity = await FindById(id);
+
+            if (entity is null)
+                throw new ArgumentException("Test with the specified ID not found!!!");
+
+            _context.Tests.Remove(entity);
         }
 
         public async Task<IEnumerable<Test>> Find(Expression<Func<Test, bool>> predicate)
@@ -35,19 +39,24 @@ namespace ZnoModelLibrary.Implementation
             return await _context.Tests.ToListAsync();
         }
 
-        public async Task<Test> FindById(int id)
+        public async Task<Test> FindById(object id)
         {
-            return await _context.Tests.Where(t => t.Id == id).FirstOrDefaultAsync();
+            return await _context.Tests.FirstOrDefaultAsync(t => t.Id == (int)id);
         }
 
-        public Task Insert(Test entity)
+        public async Task Insert(Test entity)
         {
-            throw new NotImplementedException();
+            await _context.Tests.AddAsync(entity);
         }
 
-        public Task Update(Test entityToUpdate)
+        public async Task Update(Test entityToUpdate)
         {
-            throw new NotImplementedException();
+            var entity = await FindById(entityToUpdate.Id);
+
+            if (entity is null)
+                throw new ArgumentException("Test with the specified ID not found!!!");
+
+            _context.Entry(entityToUpdate).State = EntityState.Modified;
         }
     }
 }

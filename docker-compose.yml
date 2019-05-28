@@ -1,0 +1,52 @@
+version: '3.1'
+ 
+services:
+  db:
+    image: mysql:5.7
+    ports: 
+      - 3306:3306
+    restart: always
+    volumes:
+      - ./data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: itstep
+      MYSQL_DATABASE: zno
+      MYSQL_USER: znouser
+      MYSQL_PASSWORD: znopass
+  
+  # adminer:
+  #   image: adminer
+  #   restart: always
+  #   links:
+  #     - db:db
+  #   ports:
+  #     - 8082:8080
+
+  phpmyadmin:
+     image: phpmyadmin/phpmyadmin
+     depends_on: 
+       - db
+     ports:
+       - 8081:80   
+     restart: always
+
+  api:
+    depends_on:
+      - db
+    image: zno/api
+    build: 
+      context: $PWD/BackEnd/ZnoApplication
+      dockerfile: $PWD/BackEnd/ZnoApplication/Dockerfile
+    ports:
+      - 8080:80
+
+  front:
+    depends_on:
+      - api
+    image: zno/frontend
+    build: 
+      context: $PWD/frontend/ZnoApplication
+      dockerfile: $PWD/frontend/ZnoApplication/Dockerfile
+    ports:
+      - 3000:80
+

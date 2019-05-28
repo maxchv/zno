@@ -8,11 +8,17 @@ namespace ZnoModelLibrary.Entities
     /// </summary>
     public class TestType
     {
+        /// <summary>
+        /// Идентификатор
+        /// </summary>
         [Key]
         [Required]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        /// <summary>
+        /// Название
+        /// </summary>
         [Required]
         [StringLength(100)]
         public string Name { get; set; }
