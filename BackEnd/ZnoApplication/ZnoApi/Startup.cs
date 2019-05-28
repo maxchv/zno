@@ -16,6 +16,10 @@ using Zno.DAL.Context;
 using Zno.DAL.Entities;
 using Zno.DAL.Implementation;
 using Zno.DAL.Interfaces;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
+using System.Diagnostics;
+using System.IO;
 
 namespace Zno.Server
 {
@@ -106,7 +110,7 @@ namespace Zno.Server
                     builder =>
                     {
                         builder
-                        //.WithOrigins("http://localhost:2021/")
+                        .WithOrigins("*")
                             .AllowAnyOrigin()
                             .AllowAnyHeader()
                             .AllowAnyMethod()
@@ -116,12 +120,14 @@ namespace Zno.Server
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public async void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public async void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            
 
             // Shows UseCors with named policy.
             app.UseCors("AllowSpecificOrigin");

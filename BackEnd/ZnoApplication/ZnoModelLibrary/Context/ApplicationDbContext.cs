@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Zno.DAL.Entities;
-using Zno.DAL.Entities;
 
 namespace Zno.DAL.Context
 {
@@ -39,5 +38,6 @@ namespace Zno.DAL.Context
         public DbSet<Answer> Answers { get; set; }
         public DbSet<QuestionType> QuestionTypes { get; set; }
         public DbSet<TestSettingsQuestionType> TestSettingsAnswerTypes { get; set; }
+        public DbSet<ContentType> ContentTypes { get; set; }
     }
 }
