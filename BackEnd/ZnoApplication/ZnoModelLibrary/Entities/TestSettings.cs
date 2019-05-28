@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ZnoModelLibrary.Entities
+namespace Zno.DAL.Entities
 {
     /// <summary>
     /// Настройки для теста
@@ -44,11 +44,11 @@ namespace ZnoModelLibrary.Entities
         /// <summary>
         /// Категорий сложности вопросов которые будут выдаваться
         /// </summary>
-        public IList<TestSettingsAnswerType> AnswerTypes { get; set; }
+        public IList<TestSettingsQuestionType> QuestionTypes { get; set; }
 
         public TestSettings()
         {
-            AnswerTypes = new List<TestSettingsAnswerType>();
+            QuestionTypes = new List<TestSettingsQuestionType>();
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace ZnoModelLibrary.Entities
+﻿namespace Zno.DAL.Entities
 {
     /// <summary>
     /// Детальное описание уровня сложности вопроса

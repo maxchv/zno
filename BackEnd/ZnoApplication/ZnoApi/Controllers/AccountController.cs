@@ -12,12 +12,12 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
-using ZnoApi.Models;
-using ZnoApi.Services;
-using ZnoModelLibrary.Entities;
-using ZnoModelLibrary.Interfaces;
+using Zno.Server.Models;
+using Zno.Server.Services;
+using Zno.DAL.Entities;
+using Zno.DAL.Interfaces;
 
-namespace ZnoApi.Controllers
+namespace Zno.Server.Controllers
 {
     [Authorize]
     [EnableCors("AllowSpecificOrigin")]
@@ -58,15 +58,19 @@ namespace ZnoApi.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.Login,
-                                                                      model.Password,
-                                                                      model.RememberMe,
-                                                                      lockoutOnFailure: false);
+                var user = await _unitOfWork.Users.FindByLogin(model.Login);
 
-                if (result.Succeeded)
+                if (user != null)
                 {
-                    var appUser = _userManager.Users.SingleOrDefault(u => u.Email.Equals(model.Login) || u.PhoneNumber.Equals(model.Password));
-                    return Ok(GenerateJwtToken(model.Login, appUser));
+                    var result = await _signInManager.PasswordSignInAsync(user,
+                                                                          model.Password,
+                                                                          model.RememberMe,
+                                                                          lockoutOnFailure: false);
+
+                    if (result.Succeeded)
+                    {
+                        return Ok(await GenerateJwtToken(model.Login, user));
+                    }
                 }
             }
 
@@ -313,7 +317,7 @@ namespace ZnoApi.Controllers
         /// <param name="email">Электронная почта пользователя</param>
         /// <param name="user">Текущий пользователь</param>
         /// <returns></returns>
-        private object GenerateJwtToken(string email, ApplicationUser user)
+        private async Task<object> GenerateJwtToken(string email, ApplicationUser user)
         {
             var claims = new List<Claim>
             {
@@ -321,6 +325,10 @@ namespace ZnoApi.Controllers
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.NameIdentifier, user.Id)
             };
+
+            // Добавляем список ролей доступных пользователю
+            var roles = await _userManager.GetRolesAsync(user);
+            claims.AddRange(roles.Select(role => new Claim(ClaimsIdentity.DefaultRoleClaimType, role)));
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtKey"]));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

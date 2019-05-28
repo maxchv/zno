@@ -10,11 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ZnoModelLibrary\ZnoModelLibrary.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\ZnoModelLibrary\ZnoModelLibrary.csproj" />
+    <ProjectReference Include="..\ZnoModelLibrary\Zno.DAL.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ZnoParser.Models
+namespace Zno.Parser.Models
 {
     public class HtmlSubject
     {

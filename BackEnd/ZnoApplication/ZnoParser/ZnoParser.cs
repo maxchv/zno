@@ -7,13 +7,13 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using ZnoModelLibrary.Context;
-using ZnoModelLibrary.Entities;
-using ZnoModelLibrary.Implementation;
-using ZnoModelLibrary.Interfaces;
-using ZnoParser.Models;
+using Zno.DAL.Context;
+using Zno.DAL.Entities;
+using Zno.DAL.Implementation;
+using Zno.DAL.Interfaces;
+using Zno.Parser.Models;
 
-namespace ZnoParser
+namespace Zno.Parser
 {
     public class ZnoParser
     {

@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ZnoModelLibrary.Entities
+namespace Zno.DAL.Entities
 {
     /// <summary>
     /// Промежуточная таблица между TestSettings и 
-    /// AnswerType для связи многие ко многим
+    /// QuestionType для связи многие ко многим
     /// </summary>
-    public class TestSettingsAnswerType
+    public class TestSettingsQuestionType
     {
         [Key]
         [Required]
@@ -17,7 +17,7 @@ namespace ZnoModelLibrary.Entities
         public int TestSettingsId { get; set; }
         public TestSettings TestSettings { get; set; }
 
-        public int AnswerTypeId { get; set; }
-        public AnswerType AnswerType { get; set; }
+        public int QuestionTypeId { get; set; }
+        public QuestionType QuestionType { get; set; }
     }
 }

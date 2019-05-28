@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Zno.DAL.Entities
 {
     /// <summary>
-    /// Модель "тест"
+    /// Ответ на вопрос
     /// </summary>
-    public class Test
+    public class Answer
     {
         /// <summary>
         /// Идентификатор
@@ -17,21 +17,23 @@ namespace Zno.DAL.Entities
         public int Id { get; set; }
 
         /// <summary>
-        /// Год
+        /// Тип ответа
         /// </summary>
-        [Required]
-        public ushort Year { get; set; }
+        public ContentType ContentType { get; set; }
 
         /// <summary>
-        /// Тип теста
+        /// Контент
         /// </summary>
-        [Required]
-        public TestType Type { get; set; }
+        public string Content { get; set; }
 
         /// <summary>
-        /// Название теста
+        /// Правильный ответ или нет?
         /// </summary>
-        [Required]
-        public Subject Subject { get; set; }
+        public bool RightAnswer { get; set; }
+
+        /// <summary>
+        /// Вопрос к которому относится ответ
+        /// </summary>
+        public Question Question { get; set; }
     }
 }

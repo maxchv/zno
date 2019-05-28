@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Zno.DAL.Entities;
 
-namespace ZnoModelLibrary.Entities
+namespace Zno.DAL.Entities
 {
     /// <summary>
     /// Модель "вопрос"
@@ -21,7 +22,7 @@ namespace ZnoModelLibrary.Entities
         /// Тип вопроса
         /// </summary>
         [Required]
-        public AnswerType AnswerType { get; set; }
+        public QuestionType AnswerType { get; set; }
 
         /// <summary>
         /// Тест к которому относиться данный вопрос
@@ -30,20 +31,24 @@ namespace ZnoModelLibrary.Entities
         public Test Test { get; set; }
 
         /// <summary>
-        /// Ответ в формате JSON
-        /// </summary>
-        [Required]
-        public string AnswerJson { get; set; }
-
-        /// <summary>
         /// Содержимое вопроса
         /// </summary>
         [Required]
-        public IList<QuestionContent> Contents { get; set; }
+        public IList<Answer> Answers { get; set; }
+
+        /// <summary>
+        /// Тип контента вопроса
+        /// </summary>
+        public ContentType ContentType { get; set; }
+
+        /// <summary>
+        /// Содержимое вопроса 
+        /// </summary>
+        public string Content { get; set; }
 
         public Question()
         {
-            Contents = new List<QuestionContent>();
+            Answers = new List<Answer>();
         }
     }
 }

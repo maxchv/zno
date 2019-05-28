@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using ZnoModelLibrary.Entities;
+using Zno.DAL.Entities;
+using Zno.DAL.Entities;
 
-namespace ZnoModelLibrary.Context
+namespace Zno.DAL.Context
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
@@ -16,31 +17,18 @@ namespace ZnoModelLibrary.Context
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<QuestionContent>()
-                .HasKey(qc => new { qc.QuestionId, qc.ContentId });
+            builder.Entity<TestSettingsQuestionType>()
+                .HasKey(ta => new { ta.TestSettingsId, ta.QuestionTypeId });
 
-            builder.Entity<QuestionContent>()
-                .HasOne(qc => qc.Question)
-                .WithMany(qc => qc.Contents)
-                .HasForeignKey(qc => qc.QuestionId);
-
-            builder.Entity<QuestionContent>()
-                .HasOne(qc => qc.Content)
-                .WithMany(qc => qc.Questions)
-                .HasForeignKey(qc => qc.ContentId);
-
-            builder.Entity<TestSettingsAnswerType>()
-                .HasKey(ta => new { ta.TestSettingsId, ta.AnswerTypeId });
-
-            builder.Entity<TestSettingsAnswerType>()
+            builder.Entity<TestSettingsQuestionType>()
                 .HasOne(ta => ta.TestSettings)
-                .WithMany(ta => ta.AnswerTypes)
+                .WithMany(ta => ta.QuestionTypes)
                 .HasForeignKey(ta => ta.TestSettingsId);
 
-            builder.Entity<TestSettingsAnswerType>()
-                .HasOne(ta => ta.AnswerType)
+            builder.Entity<TestSettingsQuestionType>()
+                .HasOne(ta => ta.QuestionType)
                 .WithMany(ta => ta.TestSettings)
-                .HasForeignKey(ta => ta.AnswerTypeId);
+                .HasForeignKey(ta => ta.QuestionTypeId);
         }
 
         public DbSet<Subject> Subjects { get; set; }
@@ -48,9 +36,8 @@ namespace ZnoModelLibrary.Context
         public DbSet<TestType> TestTypes { get; set; }
         public DbSet<TestSettings> TestSettings { get; set; }
         public DbSet<Question> Questions { get; set; }
-        public DbSet<Content> Contents { get; set; }
-        public DbSet<QuestionContent> QuestionContents { get; set; }
-        public DbSet<AnswerType> AnswerTypes { get; set; }
-        public DbSet<TestSettingsAnswerType> TestSettingsAnswerTypes { get; set; }
+        public DbSet<Answer> Answers { get; set; }
+        public DbSet<QuestionType> QuestionTypes { get; set; }
+        public DbSet<TestSettingsQuestionType> TestSettingsAnswerTypes { get; set; }
     }
 }

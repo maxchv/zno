@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
-using ZnoModelLibrary.Entities;
-using ZnoModelLibrary.Interfaces;
+using Zno.DAL.Entities;
+using Zno.DAL.Interfaces;
 
-namespace ZnoApi.Controllers
+namespace Zno.Server.Controllers
 {
     /// <summary>
     /// Контроллер тестирования

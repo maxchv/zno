@@ -6,11 +6,11 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
-using ZnoModelLibrary.Context;
-using ZnoModelLibrary.Entities;
-using ZnoParser.Abstruction;
+using Zno.DAL.Context;
+using Zno.DAL.Entities;
+using Zno.Parser.Abstruction;
 
-namespace ZnoParser.Models
+namespace Zno.Parser.Models
 {
     public class HtmlTest : IHtmlParser
     {
