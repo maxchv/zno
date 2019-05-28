@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ZnoParser.Abstruction
+namespace Zno.Parser.Abstruction
 {
     interface IHtmlParser
     {

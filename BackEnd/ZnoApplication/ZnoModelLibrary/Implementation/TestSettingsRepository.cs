@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using ZnoModelLibrary.Context;
-using ZnoModelLibrary.Entities;
-using ZnoModelLibrary.Interfaces;
+using Zno.DAL.Context;
+using Zno.DAL.Entities;
+using Zno.DAL.Interfaces;
 
-namespace ZnoModelLibrary.Implementation
+namespace Zno.DAL.Implementation
 {
     public class TestSettingsRepository : IGenericRepository<TestSettings>
     {
@@ -46,7 +46,26 @@ namespace ZnoModelLibrary.Implementation
 
         public async Task Insert(TestSettings entity)
         {
+            var subject = await _context.Subjects.FirstOrDefaultAsync(s => s.Id == entity.Subject.Id);
+            entity.Subject = subject;
+
+            var tests = new List<Test>();
+
+            foreach (var rawTest in entity.Tests)
+            {
+                var test = await _context.Tests.FirstOrDefaultAsync(t => t.Id == rawTest.Id);
+                tests.Add(test);
+            }
+
+            entity.Tests = tests;
+
             await _context.TestSettings.AddAsync(entity);
+
+            foreach (var questionType in entity.QuestionTypes)
+            {
+                questionType.TestSettings = entity;
+                questionType.TestSettingsId = entity.Id;
+            }
         }
 
         public async Task Update(TestSettings entityToUpdate)

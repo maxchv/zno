@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace ZnoModelLibrary.Abstraction
+namespace Zno.DAL.Abstraction
 {
     public interface IUserRepository<TEntity>
     {

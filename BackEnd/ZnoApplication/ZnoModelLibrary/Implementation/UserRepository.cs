@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using ZnoModelLibrary.Abstraction;
-using ZnoModelLibrary.Context;
-using ZnoModelLibrary.Entities;
-using ZnoModelLibrary.Interfaces;
+using Zno.DAL.Abstraction;
+using Zno.DAL.Context;
+using Zno.DAL.Entities;
+using Zno.DAL.Interfaces;
 
-namespace ZnoModelLibrary.Implementation
+namespace Zno.DAL.Implementation
 {
     public class UserRepository : IGenericRepository<ApplicationUser>, IUserRepository<ApplicationUser>
     {

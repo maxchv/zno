@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ZnoApi.Controllers;
+using Zno.Server.Controllers;
 
-namespace ZnoApi.Extensions
+namespace Zno.Server.Extensions
 {
     public static class UrlHelperExtensions
     {

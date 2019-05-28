@@ -1,8 +1,8 @@
 ﻿using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using ZnoApi.Services;
+using Zno.Server.Services;
 
-namespace ZnoApi.Extensions
+namespace Zno.Server.Extensions
 {
     public static class EmailSenderExtensions
     {

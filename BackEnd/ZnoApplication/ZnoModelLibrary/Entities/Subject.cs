@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ZnoModelLibrary.Entities
+namespace Zno.DAL.Entities
 {
     /// <summary>
     /// Модель "предмет"

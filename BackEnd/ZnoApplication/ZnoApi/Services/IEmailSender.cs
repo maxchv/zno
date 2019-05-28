@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace ZnoApi.Services
+namespace Zno.Server.Services
 {
     public interface IEmailSender
     {

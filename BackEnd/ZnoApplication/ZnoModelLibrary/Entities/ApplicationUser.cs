@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace ZnoModelLibrary.Entities
+namespace Zno.DAL.Entities
 {
     /// <summary>
     ///  Модель "пользователь"

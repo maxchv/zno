@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ZnoApi.Models
+namespace Zno.Server.Models
 {
     public class RegisterViewModel
     {
