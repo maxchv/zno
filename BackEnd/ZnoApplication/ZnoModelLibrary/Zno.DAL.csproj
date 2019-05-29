@@ -12,12 +12,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="2.2.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\newtonsoft.json\9.0.1\lib\netstandard1.0\Newtonsoft.Json.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Newtonsoft.Json" Version="9.0.1 "/>
   </ItemGroup>
 
 </Project>
