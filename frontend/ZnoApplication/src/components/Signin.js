@@ -8,6 +8,7 @@ import {
     // FormControl, Input, InputLabel, 
     FormControlLabel, Checkbox,
     Link,
+    CircularProgress,
 } from '@material-ui/core';
 
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -50,6 +51,13 @@ const styles = theme => ({
     link: {
         cursor: 'pointer',
     },
+    buttonProgress: {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        marginTop: -12,
+        marginLeft: -12,
+    },
 });
 
 
@@ -60,10 +68,11 @@ class SignIn extends Component {
 
         this.state = {
             signinUser: {
-                login: '',
-                password: '',
+                login: 'admin@domain.com',
+                password: 'QwertY123@',
                 remember: true,
-            }
+            },
+            loading: false,
         }
         this.shouldBlockNavigation = false;
 
@@ -78,14 +87,66 @@ class SignIn extends Component {
 
     handleSubmit = () => {
         console.log("Submit");
-        console.log(this.state);
+        // console.log(this.state);
+        //10.2.127.32:2021
+        //104.248.135.234:8080
+        const url = "http://104.248.135.234:8080/api/v1/account/Login";
+
+        const user = {
+            login: this.state.signinUser.login,
+            password: this.state.signinUser.password,
+            // rememberMe: this.state.signinUser.remember,
+        }
+
+        // console.log({ user });
+
+        const jsonBody = JSON.stringify(user);
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        // myHeaders.append("Content-Length", jsonBody.length.toString());
+        // myHeaders.append("X-Custom-Header", "ProcessThisImmediately");
+        myHeaders.append("Access-Control-Allow-Origin", "*");
+
+
+        const requestSettings = {
+            method: 'POST',
+            body: jsonBody,
+            mode: 'cors',
+            cache: 'default',
+            // headers: myHeaders
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+            }
+        };
+
+        console.log({ requestSettings });
+
+        this.setState({
+            signinUser: this.state.signinUser,
+            loading: true
+        });
+        fetch(url, requestSettings)
+            .then((resp) => {
+                console.log({ resp });
+            }).catch(err => {
+                console.log("ERRRRORRRRRR")
+                console.log({ err });
+                this.setState({
+                    signinUser: this.state.signinUser,
+                    loading: false
+                });
+            });
     }
 
     handleChange = (event) => {
         // console.dir(event.target);
         const { signinUser } = this.state;
         signinUser[event.target.name] = event.target.type === "checkbox" ? event.target.checked : event.target.value.trim();
-        this.setState({ signinUser });
+        this.setState({
+            signinUser: this.state.signinUser,
+            loading:this.state.loading
+        });
         this.shouldBlockNavigation = signinUser.login !== '' || signinUser.password !== '';
         console.log(this.shouldBlockNavigation);
         // console.log(this.state);
@@ -157,10 +218,14 @@ class SignIn extends Component {
                             fullWidth
                             variant="contained"
                             color="primary"
+                            disabled={this.state.loading}
                             className={classes.submit}
                         >Sign in</Button>
+                        {this.state.loading && <CircularProgress size={24} className={classes.buttonProgress} />}
 
                     </ValidatorForm>
+
+
                     <Link className={classes.link} color='secondary' component={RouterLink} to={links.signup}>Sign up</Link>
 
                 </Paper>

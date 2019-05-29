@@ -6,11 +6,13 @@ import { Prompt } from "react-router";
 import {
     Avatar, Button, CssBaseline, Paper, Typography,
     // FormControl, Input, InputLabel,
-    Link, LinearProgress
+    Link, CircularProgress,
+    IconButton, Snackbar
 } from '@material-ui/core';
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import CloseIcon from '@material-ui/icons/Close';
 
 import withStyles from '@material-ui/core/styles/withStyles';
 
@@ -49,6 +51,13 @@ const styles = theme => ({
     link: {
         cursor: 'pointer',
     },
+    buttonProgress: {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        marginTop: -12,
+        marginLeft: -12,
+    },
 });
 
 class SignUp extends Component {
@@ -60,7 +69,9 @@ class SignUp extends Component {
                 password: '',
                 confirmPassword: '',
                 email: '',
-            }
+            },
+            loading: false,
+            isErrorShowing: true,
         }
 
         this.shouldBlockNavigation = false;
@@ -71,13 +82,12 @@ class SignUp extends Component {
         ValidatorForm.addValidationRule('isPasswordMatch', (value) => {
             return value === this.state.signupUser.password;
         });
-
     }
 
     handleChange = (event) => {
         const { signupUser } = this.state;
         signupUser[event.target.name] = event.target.value;
-        this.setState({ signupUser });
+        this.setState({ signupUser: signupUser, loading: false });
 
         this.shouldBlockNavigation = signupUser.phone !== '' || signupUser.password !== '';
     }
@@ -86,7 +96,27 @@ class SignUp extends Component {
         // your submit logic
         console.log("Submit");
         console.log(this.state.signupUser);
+
+        this.setState({ signupUser: this.state.signupUser, loading: true });
+        fetch('')
+            .then(res => {
+
+                this.setState({ signupUser: this.state.signupUser, loading: false });
+            })
+            .catch(err => {
+                console.error(err);
+                this.setState({ signupUser: this.state.signupUser, loading: false });
+
+            })
     }
+
+    handleCloseSnackbar= ()=>
+        this.setState({
+            signupUser: this.state.signupUser,
+            loading: this.state.loading,
+            isErrorShowing: false,
+        });
+    
 
     render() {
 
@@ -105,7 +135,7 @@ class SignUp extends Component {
                     </Avatar>
                     <Typography component="h1" variant="h5">
                         Sign up
-        </Typography>
+                    </Typography>
                     <ValidatorForm onSubmit={this.handleSubmit} className={classes.form}>
                         {/* 
                         <FormControl margin="normal" required fullWidth>
@@ -186,16 +216,43 @@ class SignUp extends Component {
                             fullWidth
                             variant="contained"
                             color="primary"
+                            disabled={this.state.loading}
                             className={classes.submit}
-                        >
-                            Sign Up
-          </Button>
+                        >Sign Up</Button>
+                        {this.state.loading && <CircularProgress size={24} className={classes.buttonProgress} />}
 
 
                     </ValidatorForm>
                     {/* <LinearProgress size={24}/> */}
                     <Link className={classes.link} color='secondary' component={RouterLink} to={links.signin}>Sign in</Link>
                 </Paper>
+
+
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    open={this.state.isErrorShowing}
+                    autoHideDuration={6000}
+                    onClose={this.handleCloseSnackbar}
+                    ContentProps={{
+                        'aria-describedby': 'message-id',
+                    }}
+                    message={<span id="message-id">Note archived</span>}
+                    action={[
+                        <IconButton
+                            key="close"
+                            aria-label="Close"
+                            color="inherit"
+                            // className={classes.close}
+                            onClick={this.handleCloseSnackbar}
+                        >
+                            <CloseIcon />
+                        </IconButton>,
+                    ]}
+                />
+
             </main >
         );
     }
