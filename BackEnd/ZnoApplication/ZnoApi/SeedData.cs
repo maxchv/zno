@@ -7,6 +7,7 @@ using Zno.Server.Models;
 using Zno.DAL.Context;
 using Zno.DAL.Entities;
 using Zno.DAL.Interfaces;
+using Zno.Parser;
 
 namespace Zno.Server
 {
@@ -73,9 +74,7 @@ namespace Zno.Server
                     }
                 }
 
-                Zno.Parser.ZnoParser parser = new Zno.Parser.ZnoParser(unitOfWork);
-                // FIXME: Раскомментить когда будет полностью готов парсер
-                await parser.StartParsing();
+                await new ZnoParser(unitOfWork).StartParsing();
             }
         }
 

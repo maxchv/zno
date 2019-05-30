@@ -89,7 +89,7 @@ namespace Zno.Parser
                     manualType, taskType
                 });
 
-                    ctx.SaveChanges();
+                    await ctx.SaveChangesAsync();
                 }
                 else
                 {
@@ -97,7 +97,7 @@ namespace Zno.Parser
                     await unitOfWork.QuestionTypes.Insert(manyType);
                     await unitOfWork.QuestionTypes.Insert(manualType);
                     await unitOfWork.QuestionTypes.Insert(taskType);
-                    unitOfWork.SaveChanges();
+                    await unitOfWork.SaveChanges();
                 }
             }
 
@@ -127,11 +127,11 @@ namespace Zno.Parser
                 {
                     await ctx.ContentTypes.AddRangeAsync(new[]
                     {
-                    jsonType, imageType,
-                    textType, videoType
-                });
+                        jsonType, imageType,
+                        textType, videoType
+                    });
 
-                    ctx.SaveChanges();
+                    await ctx.SaveChangesAsync();
                 }
                 else
                 {
@@ -146,12 +146,12 @@ namespace Zno.Parser
         }
 
         // Метод, для добавления предметов в бд 
-        private async void _DbAddSubjects(Subject subjectEF)
+        private async Task _DbAddSubjects(Subject subjectEF)
         {
             if (unitOfWork == null)
             {
                 ctx.Subjects.Add(subjectEF);
-                ctx.SaveChanges();
+                await ctx.SaveChangesAsync();
             }
             else
             {
@@ -161,12 +161,12 @@ namespace Zno.Parser
         }
 
         // Метод, для добавления типа тестов в бд 
-        private async void _DbAddTestTypes(TestType testType)
+        private async Task _DbAddTestTypes(TestType testType)
         {
             if (unitOfWork == null)
             {
-                ctx.TestTypes.Add(testType);
-                ctx.SaveChanges();
+                await ctx.TestTypes.AddAsync(testType);
+                await ctx.SaveChangesAsync();
             }
             else
             {
@@ -175,7 +175,7 @@ namespace Zno.Parser
             }
         }
 
-        private ContentType _GetContentType(HtmlContentType htmlType)
+        private async Task<ContentType> _GetContentType(HtmlContentType htmlType)
         {
             ContentType contentType = null;
             int id = -1;
@@ -196,12 +196,12 @@ namespace Zno.Parser
 
             if (id > 0)
             {
-                contentType = unitOfWork == null ? ctx.ContentTypes.FirstOrDefault((q) => q.Id == id) : unitOfWork.ContentTypes.FindById(id).Result;
+                contentType = unitOfWork == null ? await ctx.ContentTypes.FirstOrDefaultAsync((q) => q.Id == id) : unitOfWork.ContentTypes.FindById(id).Result;
             }
 
             return contentType;
         }
-        private QuestionType _GetQuestionType(HtmlQuestionType htmlType)
+        private async Task<QuestionType> _GetQuestionType(HtmlQuestionType htmlType)
         {
 
             QuestionType questionType = null;
@@ -226,19 +226,19 @@ namespace Zno.Parser
             }
             if (id > 0)
             {
-                questionType = unitOfWork == null ? ctx.QuestionTypes.FirstOrDefault((q) => q.Id == id) : unitOfWork.QuestionTypes.FindById(id).Result;
+                questionType = unitOfWork == null ? await ctx.QuestionTypes.FirstOrDefaultAsync((q) => q.Id == id) : unitOfWork.QuestionTypes.FindById(id).Result;
             }
 
             return questionType;
         }
 
         // Метод, для добавления тестов в бд 
-        private async void _DbAddTest(Test test, IList<HtmlQuestion> questions)
+        private async Task _DbAddTest(Test test, IList<HtmlQuestion> questions)
         {
             if (unitOfWork == null)
             {
                 ctx.Tests.Add(test);
-                ctx.SaveChanges();
+                await ctx.SaveChangesAsync();
             }
             else
             {
@@ -253,13 +253,13 @@ namespace Zno.Parser
                     Question questionEF = new Question();
                     questionEF.Test = test;
                     questionEF.Content = question.QuestionBody.GetJsonQuestion();
-                    questionEF.QuestionType = _GetQuestionType(question.QuestionType);
-                    questionEF.ContentType = _GetContentType(question.QuestionBody.GetContentType());
+                    questionEF.QuestionType = await _GetQuestionType(question.QuestionType);
+                    questionEF.ContentType = await _GetContentType(question.QuestionBody.GetContentType());
 
                     if (unitOfWork == null)
                     {
-                        ctx.Questions.Add(questionEF);
-                        ctx.SaveChanges();
+                        await ctx.Questions.AddAsync(questionEF);
+                        await ctx.SaveChangesAsync();
                     }
                     else
                     {
@@ -272,12 +272,10 @@ namespace Zno.Parser
                     Console.WriteLine(ex.Message);
                 }
             }
-
-
         }
 
         // Стартовый метод работы библиотеки
-        public async void StartParsing()
+        public async Task StartParsing()
         {
             Console.WriteLine("Start parsing");
             // проверяется заполнены ли таблицы в бд. Если там есть хотя бы одна запись, 
@@ -286,58 +284,60 @@ namespace Zno.Parser
                 foundTests = unitOfWork == null ? ctx.Tests.Any() : false,
                 foundTestTypes = unitOfWork == null ? ctx.TestTypes.Any() : false;
 
-            
-
             Subject subjectEF = null;
             // Перебор все предметов. Внутренние обьекты (тесты, предметы, вопросы и т.д.) инициализируются в процессе работы библиотеки,
             // вызывая метод интерфейса IHtmlParser.InitByHtmlNode()
-            foreach (var subject in GetSubjects())
+            foreach (var subject in await GetSubjects())
             {
                 subjectEF = new Subject();
                 subjectEF.Name = subject.Name;
                 if (!foundSubjects)
                 {
-                    _DbAddSubjects(subjectEF);
+                    await _DbAddSubjects(subjectEF);
                     Console.WriteLine("Add subject " + subjectEF.Name);
                 }
 
                 // Перебор тестов
                 foreach (var test in subject.Tests)
                 {
-                    if (!ctx.TestTypes.Any(t => t.Name.Equals(test.Type)))
+                    TestType testType = new TestType();
+                    testType.Name = test.Type;
+                    if (!foundTestTypes)
                     {
-                        TestType testType = new TestType();
-                        testType.Name = test.Type;
-                        if (!foundTestTypes)
-                        {
-                            _DbAddTestTypes(testType);
-                            Console.WriteLine("Add test type " + testType.Name);
-                        }
+                        await _DbAddTestTypes(testType);
+                        Console.WriteLine("Add test type " + testType.Name);
                     }
 
                     try
                     {
                         Test testEF = new Test();
-                        testEF.Subject = ctx.Subjects.FirstOrDefault((s) => s.Name == test.Subject);
-                        testEF.Type = ctx.TestTypes.FirstOrDefault((t) => t.Name == test.Type);
-                        testEF.Year = test.Year;
+                        if (unitOfWork == null)
+                        {
+                            testEF.Subject = await ctx.Subjects.FirstOrDefaultAsync((s) => s.Name == test.Subject);
+                            testEF.Type = await ctx.TestTypes.FirstOrDefaultAsync((t) => t.Name == test.Type);
+                            testEF.Year = test.Year;
+                        }
+                        else
+                        {
+                            testEF.Subject = (await unitOfWork.Subjects.Find((s) => s.Name == test.Subject)).FirstOrDefault();
+                            testEF.Type = (await unitOfWork.TestTypes.Find((t) => t.Name == test.Type)).FirstOrDefault();
+                            testEF.Year = test.Year;
+                        }
 
 
                         if (!foundTests)
                         {
-                            _DbAddTest(testEF, test.HtmlQuestions);
+                            await _DbAddTest(testEF, test.HtmlQuestions);
                             Console.WriteLine("Add test  " + testEF.Id);
                         }
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-
+                        Console.WriteLine(ex);
                     }
-
                 }
             }
             Console.WriteLine("Close parse");
-
         }
 
         // Добавление предметов вне библиотеки
@@ -347,28 +347,25 @@ namespace Zno.Parser
         }
 
         // Получение всех распарсинних предметов и тестов
-        public IList<HtmlSubject> GetSubjects()
+        public async Task<IList<HtmlSubject>> GetSubjects()
         {
 
             foreach (var subject in htmlSubjects)
             {
-                subject.Tests = GetTestsBySubject(subject);
+                subject.Tests = await GetTestsBySubject(subject);
             }
 
             return htmlSubjects;
         }
 
         // Получение тестов по заданному предмету
-        public IList<HtmlTest> GetTestsBySubject(HtmlSubject subject)
+        public async Task<IList<HtmlTest>> GetTestsBySubject(HtmlSubject subject)
         {
             IList<HtmlTest> tests = new List<HtmlTest>();
-            var result = Task.Run(() =>
-            {
-                return client.GetAsync(new StringBuilder(END_POINT).Append(subject.Url).ToString());
-            }).Result;
+            var result = await client.GetAsync(new StringBuilder(END_POINT).Append(subject.Url).ToString());
 
             var html = new HtmlDocument();
-            html.LoadHtml(result.Content.ReadAsStringAsync().Result);
+            html.LoadHtml(await result.Content.ReadAsStringAsync());
             var collectionNodes = html.DocumentNode.SelectNodes("//*[@class=\"test-item\"]/a");
 
             var testNum = 1;
@@ -393,9 +390,7 @@ namespace Zno.Parser
                 Console.WriteLine(testNum++);
             }
 
-
             return tests;
-
         }
     }
 }
