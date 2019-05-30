@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28917.182
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zno.Server", "ZnoApi\Zno.Server.csproj", "{40D7D31A-C7D0-40C5-9144-8E2E8925DDA9}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zno.Tests", "Tests\Zno.Tests.csproj", "{D350F9E3-1E9E-4D43-9B91-C00D6FFA8FD3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zno.Parser", "ZnoParser\Zno.Parser.csproj", "{DEDA9FF8-74D2-474D-BB37-E207BC4582FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZnoParserConsoleApp", "ZnoParserConsoleApp\ZnoParserConsoleApp.csproj", "{F1CE5B47-C347-4DEA-B625-11A54F71561B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{DEDA9FF8-74D2-474D-BB37-E207BC4582FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DEDA9FF8-74D2-474D-BB37-E207BC4582FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DEDA9FF8-74D2-474D-BB37-E207BC4582FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1CE5B47-C347-4DEA-B625-11A54F71561B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1CE5B47-C347-4DEA-B625-11A54F71561B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1CE5B47-C347-4DEA-B625-11A54F71561B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1CE5B47-C347-4DEA-B625-11A54F71561B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
