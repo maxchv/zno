@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using HtmlAgilityPack;
+using Zno.Parser.Abstruction;
 
 namespace Zno.Parser.Models
 {
-    public class HtmlSubject
+    public class HtmlSubject : IHtmlParser
     {
         public string Name { get; set; }
         public string Url { get; set; }
@@ -17,6 +19,9 @@ namespace Zno.Parser.Models
             Tests = new List<HtmlTest>();
         }
 
-
+        public void InitByHtmlNode(HtmlNode node)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

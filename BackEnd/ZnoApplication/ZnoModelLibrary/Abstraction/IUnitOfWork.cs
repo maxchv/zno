@@ -13,6 +13,8 @@ namespace Zno.DAL.Interfaces
         QuestionRepository Questions { get; }
         QuestionTypeRepository QuestionTypes { get; }
 
+        ContentTypeRepository ContentTypes { get; }
+
         void BeginTransaction();
         void Commit();
         void Rollback();

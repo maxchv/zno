@@ -22,6 +22,7 @@ namespace Zno.DAL.Implementation
         private TestTypeRepository _testTypesRepository;
         private QuestionRepository _questionRepository;
         private QuestionTypeRepository _questionTypeRepository;
+        private ContentTypeRepository _contentTypeRepository;
 
         public UserRepository Users
         {
@@ -97,6 +98,17 @@ namespace Zno.DAL.Implementation
                     _questionTypeRepository = new QuestionTypeRepository(_context);
 
                 return _questionTypeRepository;
+            }
+        }
+
+        public ContentTypeRepository ContentTypes
+        {
+            get
+            {
+                if (_contentTypeRepository is null)
+                    _contentTypeRepository = new ContentTypeRepository(_context);
+
+                return _contentTypeRepository;
             }
         }
 
