@@ -39,5 +39,7 @@ namespace Zno.DAL.Context
         public DbSet<QuestionType> QuestionTypes { get; set; }
         public DbSet<TestSettingsQuestionType> TestSettingsAnswerTypes { get; set; }
         public DbSet<ContentType> ContentTypes { get; set; }
+        public DbSet<GeneratedTest> GeneratedTests { get; set; }
+        public DbSet<UserAnswer> UserAnswers { get; set; }
     }
 }

@@ -73,8 +73,8 @@ namespace Zno.Server
                         transaction.Rollback();
                     }
                 }
-
-                await new ZnoParser(unitOfWork).StartParsing();
+                // TODO: отключаем парсинг при запуске приложения
+                //await new ZnoParser(unitOfWork).StartParsing();
             }
         }
 
