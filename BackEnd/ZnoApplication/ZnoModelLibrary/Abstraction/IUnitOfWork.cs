@@ -12,6 +12,10 @@ namespace Zno.DAL.Interfaces
         TestTypeRepository TestTypes { get; }
         QuestionRepository Questions { get; }
         QuestionTypeRepository QuestionTypes { get; }
+        ContentTypeRepository ContentTypes { get; }
+        GeneratedTestRepository GeneratedTests { get; }
+        AnswerRepository Answers { get; }
+        UserAnswerRepository UserAnswers { get; }
 
         void BeginTransaction();
         void Commit();

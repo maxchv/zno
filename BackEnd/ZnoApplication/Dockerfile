@@ -1,5 +1,5 @@
 # Stage 1
-FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build-image
+FROM  microsoft/aspnetcore-build  AS build-image
 
 WORKDIR /home/app
 
@@ -11,15 +11,16 @@ RUN dotnet restore
 
 COPY . .
 
-RUN dotnet test ./Tests/Tests.csproj
+#RUN dotnet test ./Tests/Tests.csproj
 
-RUN dotnet publish ./ZnoApi/ZnoApi.csproj -o /publish/
+RUN dotnet publish ./ZnoApi/Zno.Server.csproj -o /publish/
 
 # Stage 2
-FROM mcr.microsoft.com/dotnet/core/aspnet:2.2 AS runtime
+#FROM mcr.microsoft.com/dotnet/core/aspnet:2.2 AS runtime
+FROM microsoft/aspnetcore AS runtime
 
 WORKDIR /publish
 
 COPY --from=build-image /publish .
 
-ENTRYPOINT ["dotnet", "ZnoApi.dll"]
+ENTRYPOINT ["dotnet", "Zno.Server.dll"]
