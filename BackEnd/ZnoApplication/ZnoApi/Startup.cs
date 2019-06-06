@@ -9,22 +9,21 @@ using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Text;
-using Zno.Server.Models;
-using Zno.Server.Services;
 using Zno.DAL.Context;
 using Zno.DAL.Entities;
 using Zno.DAL.Implementation;
 using Zno.DAL.Interfaces;
-using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Http;
-using System.Diagnostics;
-using System.IO;
+using Zno.Server.Models;
+using Zno.Server.Services;
 
 namespace Zno.Server
 {
     public class Startup
     {
+        private const string REQUESTS_LOG_FILE_PATH = "requests_log.log";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -120,14 +119,24 @@ namespace Zno.Server
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public async void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public async void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            
+            app.Use(async (context, next) =>
+            {
+                File.AppendAllText(REQUESTS_LOG_FILE_PATH,
+                    $"Host: {context.Request.Host}\r\n" +
+                    $"Method: {context.Request.Method}\r\n" +
+                    $"Path: {context.Request.Path}\r\n" +
+                    $"Query: {context.Request.Query.ToString()}\r\n" +
+                    $"QueryString: {context.Request.QueryString}\r\n" +
+                    $"--==============================================--\r\n\r\n");
+                await next.Invoke();
+            });
 
             // Shows UseCors with named policy.
             app.UseCors("AllowSpecificOrigin");
