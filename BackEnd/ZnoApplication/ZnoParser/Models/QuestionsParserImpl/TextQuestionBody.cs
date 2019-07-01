@@ -9,6 +9,7 @@ using Zno.Parser.Models.Enums;
 
 namespace Zno.Parser.Models.QuestionsParserImpl
 {
+    [Serializable]
     public class TextQuestionBody : IQuestionBodyParser
     {
         public string Data { get; set; }
