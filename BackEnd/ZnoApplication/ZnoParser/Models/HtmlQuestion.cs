@@ -12,74 +12,51 @@ using Zno.DAL.Entities;
 
 namespace Zno.Parser.Models
 {
+    [Serializable]
     public class HtmlQuestion : IHtmlParser
     {
-        public IQuestionBodyParser QuestionBody { get; set; }
+        public SerializeQuestionBody QuestionBody { get; set; }
         public HtmlQuestionType QuestionType { get; set; }
-        public IList<HtmlAnswer> Answers { get; private set; }
+        public List<HtmlAnswer> HtmlAnswers { get; private set; }
+        private FactoryAnswerParser factoryAnswer;
 
         public HtmlQuestion() {
-            Answers = new List<HtmlAnswer>();
+            HtmlAnswers = new List<HtmlAnswer>();
+            QuestionBody = new SerializeQuestionBody();
+            factoryAnswer = new FactoryAnswerParser();
         }
-
-        //private string ParseQuestionAnswers(HtmlNode node) {
-        //    string returnAnswers = "";
-
-        //    var answersNode = node.EndNode.SelectSingleNode(XPathBuild.XPathFromNode(node, "/div[@class=\"answers\"]"));
-
-        //    if (answersNode != null) {
-        //        var answerNode = answersNode.FirstChild;
-        //        while (answerNode != null && answerNode.Name == "div") {
-        //            //returnAnswers = new StringBuilder(returnAnswers).Append(answer.)
-        //            JsonContent content = new JsonContent();
-        //            content.Mark = answerNode.FirstChild.InnerText;
-        //            var dataNode = answerNode.FirstChild?.NextSibling;
-        //            if (dataNode?.Name == "img")
-        //            {
-        //                content.Data = dataNode.Attributes["src"]?.Value;
-        //            }
-        //            else {
-        //                content.Data = dataNode?.InnerText;
-        //            }
-
-        //            answerNode = answerNode.NextSibling;
-        //        }
-        //    }
-
-        //    return returnAnswers;
-        //}
-
 
         private void ParseQuestionBody(HtmlNode taskCard) {
             var questionNode = taskCard.EndNode.SelectSingleNode(XPathBuild.XPathFromNode(taskCard, "/div[@class=\"question\"]"));
             var iframeNode = questionNode.EndNode.SelectSingleNode(XPathBuild.XPathFromNode(questionNode, "//iframe"));
             if (iframeNode != null)
             {
-                QuestionBody = new IframeQuestionBody();
-                QuestionBody.InitByHtmlNode(questionNode);
-
+                var questionBody = new IframeQuestionBody();
+                questionBody.InitByHtmlNode(questionNode);
+                QuestionBody.initBy(questionBody);
             }
             else {
                 var imageNode = questionNode.EndNode.SelectSingleNode(XPathBuild.XPathFromNode(questionNode, "//img"));
                 if (imageNode != null)
                 {
-                    QuestionBody = new ImageQuestionBody();
-                    QuestionBody.InitByHtmlNode(questionNode);
+                    var questionBody = new ImageQuestionBody();
+                    questionBody.InitByHtmlNode(questionNode);
+                    QuestionBody.initBy(questionBody);
                 }
                 else {
                     var textNode = questionNode.EndNode.SelectSingleNode(XPathBuild.XPathFromNode(questionNode, "/p"));
-                    QuestionBody = new TextQuestionBody();
-                    QuestionBody.InitByHtmlNode(textNode == null ? questionNode : textNode);
+                    var questionBody = new TextQuestionBody();
+                    questionBody.InitByHtmlNode(textNode == null ? questionNode : textNode);
+                    QuestionBody.initBy(questionBody);
                 }
-            }
-            
+            }   
         }
 
         // Парсин вопросов
-        public void InitByHtmlNode(HtmlNode node)
+        public void InitByHtmlNode(HtmlNode taskCard)
         {
-            var answerTypeNode = node.EndNode.SelectSingleNode(new StringBuilder(node.XPath).Append("/div[@class=\"description\"]/a").ToString());
-
+            HtmlAnswers.Clear();
+            var answerTypeNode = taskCard.EndNode.SelectSingleNode(new StringBuilder(taskCard.XPath).Append("/div[@class=\"description\"]/a").ToString());
 
             //Получение правильных ответов
             switch (answerTypeNode.InnerText)
@@ -101,9 +78,12 @@ namespace Zno.Parser.Models
             }
 
             // Получение тела вопроса
-            ParseQuestionBody(node);
+            ParseQuestionBody(taskCard);
 
-
+            factoryAnswer.QuestionContentType = QuestionBody.ContentType;
+            factoryAnswer.QuestionType = QuestionType;
+            factoryAnswer.StrategyAnswerParser.InitByHtmlNode(taskCard);
+            HtmlAnswers.AddRange(factoryAnswer.StrategyAnswerParser.GetAnswers());
         }
 
     }

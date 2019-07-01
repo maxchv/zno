@@ -10,6 +10,7 @@ using Zno.Parser.Models.Enums;
 
 namespace Zno.Parser.Models.QuestionsParserImpl
 {
+    [Serializable]
     public class ImageQuestionBody : IQuestionBodyParser
     {
         public string Url { get; set; }

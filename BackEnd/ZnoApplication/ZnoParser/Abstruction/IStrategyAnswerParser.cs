@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Zno.Parser.Models;
 
 namespace Zno.Parser.Abstruction
 {
@@ -11,6 +12,7 @@ namespace Zno.Parser.Abstruction
     public interface IStrategyAnswerParser
     {
         string GetJsonAnswer();
-        void InitByHtmlNode(HtmlNode node);
+        List<HtmlAnswer> GetAnswers();
+        void InitByHtmlNode(HtmlNode taskCard);
     }
 }

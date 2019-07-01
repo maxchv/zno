@@ -14,6 +14,7 @@ using Zno.Parser.Models.Json;
 
 namespace Zno.Parser.Models
 {
+    [Serializable]
     public class HtmlTest : IHtmlParser
     {
         public HtmlTest() {
@@ -26,7 +27,7 @@ namespace Zno.Parser.Models
         public ushort Year { get; set; }
         public string Type { get; set; }
         public string Subject { get; set; }
-        public IList<HtmlQuestion> HtmlQuestions { get; set; }
+        public List<HtmlQuestion> HtmlQuestions { get; set; }
 
         // Парсинг теста
         public void InitByHtmlNode(HtmlNode node)
