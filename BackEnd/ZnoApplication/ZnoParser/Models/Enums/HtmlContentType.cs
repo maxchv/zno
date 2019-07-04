@@ -7,6 +7,6 @@ namespace Zno.Parser.Models.Enums
     [Serializable]
     public enum HtmlContentType
     {
-        String, Image, Video, None
+        String, Image, Video, None, Json
     }
 }

@@ -46,7 +46,8 @@ namespace Zno.Parser.Models
                 else {
                     var textNode = questionNode.EndNode.SelectSingleNode(XPathBuild.XPathFromNode(questionNode, "/p"));
                     var questionBody = new TextQuestionBody();
-                    questionBody.InitByHtmlNode(textNode == null ? questionNode : textNode);
+                    //questionBody.InitByHtmlNode(textNode == null ? questionNode : textNode);
+                    questionBody.InitByHtmlNode(questionNode);
                     QuestionBody.initBy(questionBody);
                 }
             }   

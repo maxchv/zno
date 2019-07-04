@@ -8,9 +8,11 @@ namespace Zno.Parser.Models.QuestionBodyAnswerParserImpl
 {
     public class StrategyManualRightAnswerParser : IStrategyAnswerParser
     {
+        private List<HtmlAnswer> htmlAnswers = new List<HtmlAnswer>();
+
         public List<HtmlAnswer> GetAnswers()
         {
-            throw new NotImplementedException();
+            return htmlAnswers;
         }
 
         public string GetJsonAnswer()
@@ -20,7 +22,7 @@ namespace Zno.Parser.Models.QuestionBodyAnswerParserImpl
 
         public void InitByHtmlNode(HtmlNode node)
         {
-            throw new NotImplementedException();
+            
         }
     }
 }
