@@ -76,9 +76,9 @@ namespace Zno.Parser
             client = new HttpClient();
 
             htmlSubjects.Add(new HtmlSubject("Українська мова і література", "ukrainian/"));
-            //htmlSubjects.Add(new HtmlSubject("Математика", "mathematics/"));
-            //htmlSubjects.Add(new HtmlSubject("Фізика", "physics/"));
-            //htmlSubjects.Add(new HtmlSubject("Англійська мова", "english/"));
+            htmlSubjects.Add(new HtmlSubject("Математика", "mathematics/"));
+            htmlSubjects.Add(new HtmlSubject("Фізика", "physics/"));
+            htmlSubjects.Add(new HtmlSubject("Англійська мова", "english/"));
         }
 
         // Инициализация обьектов и добавление предметов на скачивание в список

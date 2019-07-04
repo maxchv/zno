@@ -49,6 +49,46 @@ namespace Zno.Parser.Models.QuestionBodyAnswerParserImpl
             return htmlAnswer;
         }
 
+        private void SetAnswersNoneBlock(HtmlNode taskCard)
+        {
+            
+            var selectAnswersVariants = taskCard.EndNode.SelectSingleNode(XPathBuild.XPathFromNode(taskCard, "//table[@class=\"select-answers-variants\"]"));
+
+            if (selectAnswersVariants != null)
+            {
+                List<int> listAddsIndexes = new List<int>();
+
+                var idxAnswer = 0;
+
+                // Получение отдельной строки с ответами
+                foreach (var tr in selectAnswersVariants.ChildNodes)
+                {
+                    var tdArray = tr.Name != "#text" ? tr.SelectNodes(XPathBuild.XPathFromNode(tr, "//td")) : null;
+                    if (tdArray != null && tdArray.Count > 0)
+                    {
+                        var idxTd = 0;
+
+                        // Получение каждого вопроса в строке
+                        foreach (var td in tdArray)
+                        {
+                            var markerOk = td.EndNode.SelectSingleNode(XPathBuild.XPathFromNode(td, "//*[@class=\"marker ok\"]"));
+
+                            if (markerOk != null)
+                            {
+                                HtmlAnswer htmlAnswer = GenerateAnswer("1" + (idxAnswer + 1), "1" + (idxTd + 1), true);
+                                htmlAnswers.Add(htmlAnswer);
+                                listAddsIndexes.Add(idxTd);
+                                idxAnswer++;
+                                break;
+                            }
+                            idxTd++;
+                        }
+                    }
+                }
+            }
+
+        }
+
         /// <summary>
         /// Заполение массива ответов, если блок answers один
         /// </summary>
@@ -89,7 +129,7 @@ namespace Zno.Parser.Models.QuestionBodyAnswerParserImpl
 
                             if (markerOk != null)
                             {
-                                HtmlAnswer htmlAnswer = GenerateAnswer("1" + (idxTd+1), answerBlock[idxTd].InnerText, true);
+                                HtmlAnswer htmlAnswer = GenerateAnswer("1" + (idxAnswer + 1), answerBlock[idxTd].InnerText, true);
                                 htmlAnswers.Add(htmlAnswer);
                                 listAddsIndexes.Add(idxTd);
                                 idxAnswer++;
@@ -183,13 +223,20 @@ namespace Zno.Parser.Models.QuestionBodyAnswerParserImpl
                 if (answers.Count == 1)
                     SetAnswersOneBlock(taskCard);
                 else if (answers.Count >= 2) {
-                    if (answers[0].ChildNodes != null && answers[0].ChildNodes.Count > 1)
+                    if (answers[0].ChildNodes != null && answers[0].ChildNodes.Count > 2)
                     {
                         SetAnswersTwiceBlock(taskCard);
                     }
                     else
                     {
-                        SetAnswersOneBlock(taskCard);
+                        if (answers[1].ChildNodes != null && answers[1].ChildNodes.Count > 2)
+                        {
+                            SetAnswersOneBlock(taskCard);
+                        }
+                        else
+                        {
+                            SetAnswersNoneBlock(taskCard);
+                        }
                     }
                 }
             }

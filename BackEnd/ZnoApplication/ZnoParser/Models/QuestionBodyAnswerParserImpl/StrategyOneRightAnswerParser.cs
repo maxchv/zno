@@ -60,13 +60,28 @@ namespace Zno.Parser.Models.QuestionBodyAnswerParserImpl
 
         private void _ParseByNoneTableAnswers(HtmlNode taskCard, HtmlNode answers)
         {
-
+            
+            var trRightAnswers = taskCard.EndNode.SelectSingleNode(XPathBuild.XPathFromNode(taskCard, "//table[@class=\"select-answers-variants\"]//tr[2]"));
+            if (trRightAnswers != null)
+            {
+                int idx = 0;
+                foreach (var td in trRightAnswers.ChildNodes)
+                {
+                    HtmlAnswer htmlAnswer = new HtmlAnswer();
+                    var markerOk = td.EndNode.SelectSingleNode(XPathBuild.XPathFromNode(td, "//*[@class=\"marker ok\"]"));
+                    htmlAnswer.Content = (idx + 1).ToString();
+                    htmlAnswer.HtmlContentType = Enums.HtmlContentType.String;
+                    htmlAnswer.IsRight = markerOk != null;
+                    htmlAnswers.Add(htmlAnswer);
+                    idx++;
+                }
+            }
         }
 
         public void InitByHtmlNode(HtmlNode taskCard)
         {
             var answers = taskCard.EndNode.SelectSingleNode(XPathBuild.XPathFromNode(taskCard, "//*[@class=\"answers\"]"));
-            if (answers != null) {
+            if (answers != null && answers.ChildNodes.Count > 3) {
                 _ParseByTableAnswers(taskCard, answers);
             }
             else

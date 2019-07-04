@@ -100,6 +100,19 @@ namespace Zno.Parser.Models.RepositoryParser
                     unitOfWork.Questions.Insert(questionEF);
                     unitOfWork.SaveChanges();
 
+                    foreach (var answer in question.HtmlAnswers)
+                    {
+                        Answer answerEF = new Answer();
+                        answerEF.ContentType = GetContentType(answer.HtmlContentType);
+                        answerEF.Content = answer.Content;
+                        answerEF.Question = questionEF;
+                        answerEF.RightAnswer = answer.IsRight;
+
+                        unitOfWork.Answers.Insert(answerEF);
+                        unitOfWork.SaveChanges();
+                        
+                    }
+
                 }
                 catch (Exception ex)
                 {
@@ -125,6 +138,19 @@ namespace Zno.Parser.Models.RepositoryParser
 
                     await unitOfWork.Questions.Insert(questionEF);
                     await unitOfWork.SaveChanges();
+
+                    foreach (var answer in question.HtmlAnswers)
+                    {
+                        Answer answerEF = new Answer();
+                        answerEF.ContentType = GetContentType(answer.HtmlContentType);
+                        answerEF.Content = answer.Content;
+                        answerEF.Question = questionEF;
+                        answerEF.RightAnswer = answer.IsRight;
+
+                        await unitOfWork.Answers.Insert(answerEF);
+                        await unitOfWork.SaveChanges();
+
+                    }
 
                 }
                 catch (Exception ex)
