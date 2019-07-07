@@ -42,7 +42,7 @@ namespace Zno.DAL.Implementation
 
         public async Task<Answer> FindById(object id)
         {
-            return await _context.Answers.FirstOrDefaultAsync(s => s.Id == (int)id);
+            return await _context.Answers.Include(a=>a.ContentType).FirstOrDefaultAsync(s => s.Id == (int)id);
         }
 
         public async Task Insert(Answer entity)
