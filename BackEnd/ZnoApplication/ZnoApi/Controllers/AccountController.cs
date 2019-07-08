@@ -311,6 +311,24 @@ namespace Zno.Server.Controllers
             }
         }
 
+        
+        [HttpGet]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            try
+            {
+                var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+                var userRoles = await _userManager.GetRolesAsync(currentUser);
+
+                object user = new { email = currentUser.Email, userName = currentUser.UserName, userRoles = userRoles.ToArray() };
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         /// <summary>
         /// Генерация JWT токена
         /// </summary>
