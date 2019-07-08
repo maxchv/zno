@@ -1,0 +1,94 @@
+drop DATABASE if EXISTS book_shop_bykova_db;
+CREATE DATABASE book_shop_bykova_db CHARACTER SET utf8;
+
+use book_shop_bykova_db;
+
+CREATE TABLE publishers(
+	id int PRIMARY KEY AUTO_INCREMENT,
+    name nvarchar(50) not null,
+    address nvarchar(150) not null,
+    phone varchar(15) not null
+);
+
+CREATE TABLE categories(
+	id int PRIMARY KEY AUTO_INCREMENT,
+    name nvarchar(50) not null,
+    id_parent_category int null,
+    FOREIGN KEY(id_parent_category) REFERENCES categories(id) ON DELETE CASCADE
+);
+
+CREATE TABLE books(
+	id int PRIMARY KEY AUTO_INCREMENT,
+    name nvarchar(50) not null,
+    yearPublisher int not null,
+    id_publisher int not null,
+    id_category int not null,
+    FOREIGN KEY(id_publisher) REFERENCES publishers(id) ON DELETE CASCADE,
+    FOREIGN KEY(id_category) REFERENCES categories(id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE books_photos(
+	id_book int not null,
+    path varchar(50) not null,
+    FOREIGN KEY(id_book) REFERENCES books(id) ON DELETE CASCADE
+);
+
+CREATE TABLE `authors`(
+    id int PRIMARY KEY AUTO_INCREMENT,
+    name varchar(100) not null
+);
+
+CREATE TABLE books_authors(
+	id_book int not null,
+    id_author int not null,
+    FOREIGN KEY(id_book) REFERENCES books(id) ON DELETE CASCADE,
+    FOREIGN KEY(id_author) REFERENCES authors(id) ON DELETE CASCADE
+);
+
+CREATE TABLE users(
+	id int PRIMARY KEY AUTO_INCREMENT,
+    displayName nvarchar(150) not null,
+    email varchar(100) not null,
+    `password` varchar(100) not null,
+    role nvarchar(50) not null
+);
+
+INSERT INTO `users`(`displayName`, `email`, `password`, `role`) VALUES ('admin','admin@gmail.com','aa920e61bb9322e341c0d1a3c3668fa8','admin');
+
+INSERT INTO `categories`(`id`, `name`, `id_parent_category`) VALUES
+(1, "История", null),
+(2, "Программирование", null);
+
+INSERT INTO `categories`(`id`, `name`, `id_parent_category`) VALUES
+(3, "Мировая", 1),
+(4, "Средних веков", 1),
+(5, "PHP", 2),
+(6, "JAVA", 2);
+
+INSERT INTO `categories`(`id`, `name`, `id_parent_category`) VALUES
+(7, "Страны", 4);
+
+INSERT INTO `categories`(`id`, `name`, `id_parent_category`) VALUES
+(8, "Украина", 7),
+(9, "США", 7);
+
+INSERT INTO `authors`(`id`, `name`) VALUES (1, "Автор 1"), (2, "Автор 2"), (3, "Автор 3"), (4, "Автор 4"), (5, "Автор 5");
+
+INSERT INTO `publishers`(`id`, `name`, `address`, `phone`) VALUES (1, "Издатель 'РАНОК'", "Украина, Днепр, Глинки 34", "0763961964"), (2, "Издатель 'Весенний'", "Украина, Харьков, Камчатская 68", "0419636913"), (3, "Издатель 'Радужный'", "Украина, Львов, Зеленая 120", "0917530682"), (4, "Издатель 123", "Украина, Николаев, Козацкая 201", "0539710794"), (5, "Издатель 1", "Украина, Киев, Курчатова 12", "0937984861");
+
+INSERT INTO `books`(`id`, `name`, `yearPublisher`, `id_publisher`, `id_category`) VALUES
+(1,"Книга 1",2014, 1, 5),
+(2,"Книга 2",2014, 2, 6),
+(3,"Книга 3",2004, 3, 8),
+(4,"Книга 4",2007, 5, 9);
+
+/*
+DROP TABLE IF EXISTS `users`;
+DROP TABLE IF EXISTS `books_authors`;
+DROP TABLE IF EXISTS `authors`;
+DROP TABLE IF EXISTS `books_photos`;
+DROP TABLE IF EXISTS `books`;
+DROP TABLE IF EXISTS `categories`;
+DROP TABLE IF EXISTS `publishers`;
+*/

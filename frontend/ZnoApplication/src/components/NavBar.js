@@ -23,6 +23,7 @@ import HomeIcon from "@material-ui/icons/HomeOutlined";
 
 // Other resources
 import { links } from "../links";
+import { isAuthenticated } from '../auth';
 
 
 
@@ -122,6 +123,11 @@ class NavBar extends Component {
             iconComponent: <InfoIcon className={classes.icon} />
         }];
 
+        const authOrExit = {
+            link: isAuthenticated() ? links.logout : links.signin,
+            displayTitle: isAuthenticated() ? "Exit" : "Sign in / Sing up",
+        };
+
 
         return (
             <div className={classes.root}>
@@ -139,8 +145,8 @@ class NavBar extends Component {
                             </Link>
                         </Typography>
                         <Button color="inherit">
-                            <Link to={links.signin} component={RouterLink} underline='none' color="inherit" >
-                                Sign in / Sing up
+                            <Link to={authOrExit.link} component={RouterLink} underline='none' color="inherit" >
+                            {authOrExit.displayTitle}
                             </Link>
                         </Button>
 

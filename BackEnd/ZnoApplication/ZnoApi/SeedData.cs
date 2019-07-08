@@ -8,6 +8,7 @@ using Zno.DAL.Context;
 using Zno.DAL.Entities;
 using Zno.DAL.Interfaces;
 using Zno.Parser;
+using Zno.Parser.Helpers;
 
 namespace Zno.Server
 {
@@ -74,7 +75,9 @@ namespace Zno.Server
                     }
                 }
                 // TODO: отключаем парсинг при запуске приложения
-                //await new ZnoParser(unitOfWork).StartParsing();
+                /*ZnoParser znoParser = new ZnoParser(unitOfWork);
+                znoParser.SerializeParser = new XmlSerializableParser("parser.xml");
+                await znoParser.StartParsingAsync();*/
             }
         }
 
