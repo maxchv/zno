@@ -10,6 +10,7 @@ namespace controller;
 
 
 use config\DbConfig;
+use models\api\Api;
 use mvc\controller\BaseController;
 
 class AdminController extends SiteController
@@ -18,6 +19,7 @@ class AdminController extends SiteController
     {
         parent::__construct($controllerName, $moduleName);
         $this->layoutFile = "layouts\\admin_main.php";
+        $this->models["user"] = json_decode(Api::getUserByToken($_COOKIE['zno_access_token']));
     }
 
     public function authorizedActions()
@@ -38,7 +40,55 @@ class AdminController extends SiteController
         return $res;
     }
 
+    public function tests(){
+        $result = Api::getTests($_COOKIE['zno_access_token']);
+        $tests = $result != "" ? json_decode($result) : [];
+
+        $this->render("tests", ["tests"=>$tests]);
+    }
+
+    public function subjects(){
+        $result = Api::getSubjects($_COOKIE['zno_access_token']);
+        $subjects = $result != "" ? json_decode($result) : [];
+
+        $this->render("subjects", ["subjects"=>$subjects]);
+    }
+
+    public function levels(){
+        $result = Api::getAllLevelOfDifficulty($_COOKIE['zno_access_token']);
+        $levels = $result != "" ? json_decode($result) : [];
+
+        $this->render("levels", ["levels"=>$levels]);
+    }
+
+    public function testsettings(){
+        $result = Api::getAllTestSettings($_COOKIE['zno_access_token']);
+        $testSettings = $result != "" ? json_decode($result) : [];
+
+        $resultTests = Api::getTests($_COOKIE['zno_access_token']);
+        $tests = $resultTests != "" ? json_decode($resultTests) : [];
+
+        $resultSubjects = Api::getSubjects($_COOKIE['zno_access_token']);
+        $subjects = $resultSubjects != "" ? json_decode($resultSubjects) : [];
+
+        $resultLevels = Api::getAllLevelOfDifficulty($_COOKIE['zno_access_token']);
+        $levels = $resultLevels != "" ? json_decode($resultLevels) : [];
+
+        $this->render("testSettings",
+            [
+                "testSettings"=>$testSettings,
+                'tests' => $tests,
+                'subjects' => $subjects,
+                'levels' => $levels,
+            ]);
+    }
+
+    public function logout(){
+        \Application::redirect("account/logout");
+    }
+
     public function index(){
-        $this->render("index", []);
+        \Application::redirect("admin/testSettings");
+        //$this->render("index", []);
     }
 }

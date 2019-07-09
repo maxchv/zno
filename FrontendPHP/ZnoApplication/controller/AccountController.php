@@ -10,6 +10,7 @@ namespace controller;
 
 
 use config\DbConfig;
+use models\api\Api;
 use mvc\controller\BaseController;
 
 class AccountController extends SiteController
@@ -39,28 +40,20 @@ class AccountController extends SiteController
         }
     }
 
+    public function logout(){
+        if(isset($_COOKIE['zno_access_token'])) {
+            unset($_COOKIE['zno_access_token']);
+            setcookie('zno_access_token', null, -1, DbConfig::$config['_base_url']);
+        }
+
+        \Application::redirect("account/login");
+    }
+
     public function login(){
-        /*if($_SERVER['REQUEST_METHOD'] == "POST"){
-            $json = [
-                'login' => $_REQUEST['login'],
-                'password'=> $_REQUEST['password'],
-                'rememberMe'=> true
-            ];
-
-            $links = DbConfig::getLinks();
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $links['login']);
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
-            $result = curl_exec($ch);
-
-        }*/
-        $cookie = $_COOKIE;
         $this->render("login", [], false);
     }
 
     public function register(){
-
+        $this->render("register", [], false);
     }
 }

@@ -104,7 +104,7 @@ namespace Zno.Server.Controllers
                     await _roleManager.CreateRoleAsync("User");
                     await _userManager.AddToRoleAsync(newUser, "User");
 
-                    return Ok();
+                    return Ok(true);
                 }
 
                 StringBuilder builder = new StringBuilder();
@@ -277,7 +277,7 @@ namespace Zno.Server.Controllers
         /// Выход из системы
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> Logout()
         {
             try

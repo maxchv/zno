@@ -26,7 +26,7 @@
 
 
 /**
- * Bridget makes jQuery widgets
+ * Bridget makes jQuery widjets
  * v1.0.1
  * MIT license
  */

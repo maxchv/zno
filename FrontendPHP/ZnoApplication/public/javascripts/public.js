@@ -5,12 +5,15 @@ const LINKS = {
     login: `${URL_API}/account/Login`,
     getCurrentUser: `${URL_API}/account/GetCurrentUser`,
     register:  `${URL_API}/account/Register`,
-    getAllTests:  `${URL_API}/test/get-all-tests`,
-    getAllSubjects:  `${URL_API}/test/get-all-subjects`,
-    getAllLevelOfDifficulty:  `${URL_API}/test/get-all-level-of-difficulty`,
-    createTestSettings:  `${URL_API}/test/create-test-settings`,
-    updateTestSettings:  `${URL_API}/test/update-test-settings`,
-    deleteTestSettings:  `${URL_API}/test/delete-test-settings`,
+    getAllTests:  `${URL_API}/test/GetAllTests`,
+    getAllSubjects:  `${URL_API}/test/GetAllSubjects`,
+    getAllLevelOfDifficulty:  `${URL_API}/test/GetAllLevelOfDifficulty`,
+    createTestSettings:  `${URL_API}/test/CreateTestSettings`,
+    updateTestSettings:  `${URL_API}/test/UpdateTestSettings`,
+    deleteTestSettings:  `${URL_API}/test/DeleteTestSettings`,
+    createNewTest:  `${URL_API}/testing/CreateNewTestV2`,
+    savingAnswer:  `${URL_API}/testing/SavingAnswer`,
+
 };
 
 var baseHeaders = {};
@@ -19,6 +22,88 @@ function setAccessToken() {
     baseHeaders = {
         'Authorization': "Bearer "+getCookie("zno_access_token"),
     };
+}
+
+function deleteTestSettings(settingsId, success, error) {
+    setAccessToken();
+    $.ajax({
+        url: LINKS.deleteTestSettings + "?settingsId="+settingsId,
+        headers: baseHeaders,
+        method: "DELETE",
+        dataType: "json",
+        contentType: "application/json",
+        success: success,
+        error: error,
+    });
+}
+
+function createNewTest(subjectId, success, error) {
+    setAccessToken();
+    $.ajax({
+        url: LINKS.createNewTest + "?subjectId="+subjectId,
+        headers: baseHeaders,
+        method: "POST",
+        dataType: "json",
+        contentType: "application/json",
+        success: success,
+        error: error,
+    });
+}
+
+function savingAnswer(questionId, generatedTestId, answers, success, error) {
+    setAccessToken();
+
+    var data = JSON.stringify(answers);
+
+    $.ajax({
+        url: LINKS.savingAnswer + `?questionId=${questionId}&generatedTestId=${generatedTestId}`,
+        headers: baseHeaders,
+        method: "POST",
+        dataType: "json",
+        data: data,
+        contentType: "application/json",
+        success: success,
+        error: error,
+    });
+}
+
+function loginUser(username, password){
+    var data = JSON.stringify({
+        login: username,
+        password: password,
+        rememberMe: true
+    });
+
+    $.ajax({
+        url: LINKS.login,
+        method: "POST",
+        data: data,
+        dataType: "json",
+        contentType: "application/json",
+        success: function(json){
+            console.log(json);
+            setCookie('zno_access_token', json.access_token, {expires: json.expires, path: BASE_URL});
+
+            setAccessToken();
+
+            getUserByToken((json) => {
+                console.log(json);
+                if(json.email && json.userRoles.length > 0){
+                    /*var date = new Date(new Date().getTime() + 60 * 1000);
+                    setCookie("zno_user_name", json.userName, {expires: date.toUTCString(), path: BASE_URL});
+                    setCookie("zno_user_email", json.email, {expires: date.toUTCString(), path: BASE_URL});
+                    setCookie("zno_user_role", json.userRoles[0], {expires: date.toUTCString(), path: BASE_URL});*/
+                    location.href = `${location.protocol}//${location.host}${BASE_URL}/`;
+                }
+            }, (error) => {
+                console.log(error);
+            });
+
+        },
+        error: function(err){
+            console.log("Not valid login or password");
+        }
+    });
 }
 
 function getUserByToken(success, error) {

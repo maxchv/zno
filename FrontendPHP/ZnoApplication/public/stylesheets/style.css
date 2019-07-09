@@ -13,7 +13,7 @@ body
 
 /*--------------------*/
 
-#login
+#login, #register
 {
     background-color: #fff;
     background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#eee));
@@ -22,7 +22,7 @@ body
     background-image: -ms-linear-gradient(top, #fff, #eee);
     background-image: -o-linear-gradient(top, #fff, #eee);
     background-image: linear-gradient(top, #fff, #eee);
-    height: 240px;
+    /*height: 240px;*/
     width: 400px;
     margin: -150px 0 0 -230px;
     padding: 30px;
@@ -56,7 +56,7 @@ body
             0 7px 0 rgba(0, 0, 0, .2);
 }
 
-#login:before
+#login:before, #register:before
 {
     content: '';
     position: absolute;
@@ -254,4 +254,8 @@ fieldset
 .vladmaxi-top span.right a{
     float: left;
     display: block;
+}
+
+.errors p {
+    color: red;
 }
