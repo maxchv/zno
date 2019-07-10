@@ -13,17 +13,22 @@
 
 <body>
 
-<form id="login" method="post">
-    <h1>SignIn</h1>
+<form id="register" method="post">
+    <h1>Register</h1>
     <fieldset id="inputs">
-        <input id="username" name="login" type="text" placeholder="Login" value="admin@domain.com" autofocus required>
-        <input id="password" name="password" type="password" placeholder="Password" value="QwertY123@" required>
+        <input id="phone" name="phone" type="tel" placeholder="Phone" value="+380123456789" autofocus required><br/>
+        <input id="password" name="password" type="password" placeholder="Password" value="QwertY123@" required><br/>
+        <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Confirm Password" value="QwertY123@" required><br/>
+        <input id="email" name="email" type="email" placeholder="Email" value="mail@domen.ua" required>
     </fieldset>
+    <div class="errors">
+
+    </div>
     <fieldset id="actions">
-        <input type="submit" id="submit" value="SIGIN">
-        <!--a href="">Забыли пароль?</a--><a href="<?=Application::getUrl("account", "register")?>">Регистрация</a>
+        <input type="submit" id="submit" value="REGISTER">
+        <!--a href="">Забыли пароль?</a--><a href="<?=Application::getUrl("account", "login")?>">Вход</a>
     </fieldset>
 </form>
-<script type="application/javascript" src="<?=\config\DbConfig::$config["public_url"]?>javascripts/views/account/login.js"></script>
+<script type="application/javascript" src="<?=\config\DbConfig::$config["public_url"]?>javascripts/views/account/register.js"></script>
 </body>
 </html>

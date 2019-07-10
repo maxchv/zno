@@ -9,7 +9,7 @@ $(function () {
 
   "use strict";
 
-  //Make the dashboard widgets sortable Using jquery UI
+  //Make the dashboard widjets sortable Using jquery UI
   $(".connectedSortable").sortable({
     placeholder: "sort-highlight",
     connectWith: ".connectedSortable",

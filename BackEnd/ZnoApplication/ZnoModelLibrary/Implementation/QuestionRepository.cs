@@ -31,7 +31,7 @@ namespace Zno.DAL.Implementation
 
         public async Task<IEnumerable<Question>> Find(Expression<Func<Question, bool>> predicate)
         {
-            return await _context.Questions.Where(predicate).ToListAsync();
+            return await _context.Questions.Include(q=>q.ContentType).Include(q => q.QuestionType).Include(q => q.Answers).Where(predicate).ToListAsync();
         }
 
         public async Task<IEnumerable<Question>> FindAll()
@@ -41,7 +41,7 @@ namespace Zno.DAL.Implementation
 
         public async Task<Question> FindById(object id)
         {
-            return await _context.Questions.FirstOrDefaultAsync(t => t.Id == (int)id);
+            return await _context.Questions.Include(q=>q.Answers).Include(q => q.ContentType).Include(q => q.QuestionType).FirstOrDefaultAsync(t => t.Id == (int)id);
         }
 
         public async Task Insert(Question entity)

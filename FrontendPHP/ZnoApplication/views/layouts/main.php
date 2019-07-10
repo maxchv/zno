@@ -1,127 +1,346 @@
-<html lang="en">
-
+<!DOCTYPE html>
+<html>
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags-->
-    <title>E-SHOP HTML Template</title>
-    <!-- Google font-->
-    <link href="https://fonts.googleapis.com/css?family=Hind:400,700" rel="stylesheet" />
-    <!-- Bootstrap-->
-    <link type="text/css" rel="stylesheet" href="<?=PUBLIC_URL?>site/css/bootstrap.min.css" />
-    <!-- Slick-->
-    <link type="text/css" rel="stylesheet" href="<?=PUBLIC_URL?>site/css/slick.css" />
-    <link type="text/css" rel="stylesheet" href="<?=PUBLIC_URL?>site/css/slick-theme.css" />
-    <!-- nouislider-->
-    <link type="text/css" rel="stylesheet" href="<?=PUBLIC_URL?>site/css/nouislider.min.css" />
-    <!-- Font Awesome Icon-->
-    <link rel="stylesheet" href="<?=PUBLIC_URL?>site/css/font-awesome.min.css" />
-    <!-- Custom stlylesheet-->
-    <link type="text/css" rel="stylesheet" href="<?=PUBLIC_URL?>site/css/style.css" />
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries-->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file://-->
-    <!--if lt IE 9script(src='https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js')
-script(src='https://oss.maxcdn.com/respond/1.4.2/respond.min.js')-->
-</head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>AdminLTE 2 | Dashboard</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="icon" href="http://vladmaxi.net/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="http://vladmaxi.net/favicon.ico" type="image/x-icon">
+    <!-- Bootstrap 3.3.5 -->
+    <link rel="stylesheet" href="<?=\config\DbConfig::$config['admin_public_url']?>bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="<?=\config\DbConfig::$config['admin_public_url']?>dist/css/AdminLTE.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="<?=\config\DbConfig::$config['admin_public_url']?>dist/css/skins/_all-skins.min.css">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="<?=\config\DbConfig::$config['admin_public_url']?>plugins/iCheck/flat/blue.css">
+    <!-- Morris chart -->
+    <link rel="stylesheet" href="<?=\config\DbConfig::$config['admin_public_url']?>plugins/morris/morris.css">
+    <!-- jvectormap -->
+    <link rel="stylesheet" href="<?=\config\DbConfig::$config['admin_public_url']?>plugins/jvectormap/jquery-jvectormap-1.2.2.css">
+    <!-- Date Picker -->
+    <link rel="stylesheet" href="<?=\config\DbConfig::$config['admin_public_url']?>plugins/datepicker/datepicker3.css">
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="<?=\config\DbConfig::$config['admin_public_url']?>plugins/daterangepicker/daterangepicker-bs3.css">
+    <!-- bootstrap wysihtml5 - text editor -->
+    <link rel="stylesheet" href="<?=\config\DbConfig::$config['admin_public_url']?>plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
 
-<body>
-<header>
-    <!-- header-->
-    <div id="header">
-        <div class="container">
-            <div class="pull-left">
-                <!-- Logo-->
-                <div class="header-logo"><a class="logo" href="#"><img src="<?=PUBLIC_URL?>site/img/logo.png" alt=""/></a></div>
-                <!-- /Logo-->
-                <!-- Search-->
-                <div class="header-search">
-                    <!-- <form>-->
-                    <!-- <input class="input search-input" type="text" placeholder="Enter your keyword">-->
-                    <!-- <select class="input search-categories">-->
-                    <!-- <option value="0">All Categories</option>-->
-                    <!-- <option value="1">Category 01</option>-->
-                    <!-- <option value="1">Category 02</option>-->
-                    <!-- </select>-->
-                    <!-- <button class="search-btn"><i class="fa fa-search"></i></button>-->
-                    <!-- </form>-->
-                    <!-- /Search-->
-                </div>
-            </div>
-            <div class="pull-right"></div>
-        </div>
-        <!-- header-->
-        <!-- container-->
-    </div>
-</header>
-<div id="navigation">
-    <!-- container-->
-    <div class="container">
-        <div id="responsive-nav">
-            <!-- category nav-->
-            <div class="category-nav show-on-click"><span class="category-header">Categories <i class="fa fa-list"></i></span>
-                <ul class="category-list">
-                    <?= /** @var \models\db\mysql\tables\Category[] $categories */
-                    \models\widjets\CategoryWidjet::render($categories)?>
+    <style>
+        .btn-block-auto{
+            width: auto;
+            display: inline-block;
+        }
+        .center {
+            text-align: center;
+        }
+        .padding30{
+            padding: 30px;
+        }
+
+        .left{
+            text-align: left;
+        }
+
+        table tr{
+            background-color: rgba(60, 141, 188, 0.52);
+        }
+    </style>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery 2.1.4 -->
+    <script src="<?=\config\DbConfig::$config['admin_public_url']?>plugins/jQuery/jQuery-2.1.4.min.js"></script>
+    <!-- jQuery UI 1.11.4 -->
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+
+    <script type="application/javascript" src="<?=\config\DbConfig::$config["public_url"]?>javascripts/glm-ajax.js"></script>
+    <script type="application/javascript" src="<?=\config\DbConfig::$config["public_url"]?>javascripts/public.js"></script>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <header class="main-header">
+        <!-- Logo -->
+        <a href="index2.html" class="logo">
+            <!-- mini logo for sidebar mini 50x50 pixels -->
+            <span class="logo-mini"><b>A</b>LT</span>
+            <!-- logo for regular state and mobile devices -->
+            <span class="logo-lg"><b>Admin</b>LTE</span>
+        </a>
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top" role="navigation">
+            <!-- Sidebar toggle button-->
+            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                <span class="sr-only">Toggle navigation</span>
+            </a>
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+
+                    <li class="dropdown user user-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <img src="<?=\config\DbConfig::$config['admin_public_url']?>dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+                            <span class="hidden-xs"><?=$user->userName?></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!-- User image -->
+                            <li class="user-header">
+                                <img src="<?=\config\DbConfig::$config['admin_public_url']?>dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                                <p>
+                                    <?=$user->userName?>
+                                </p>
+                            </li>
+
+                            <!-- Menu Footer-->
+                            <li class="user-footer">
+                                <div class="pull-left">
+                                    <a href="#" class="btn btn-default btn-flat">Profile</a>
+                                </div>
+                                <div class="pull-right">
+                                    <a href="<?=Application::getUrl("admin/logout")?>" class="btn btn-default btn-flat">Sign out</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+
                 </ul>
             </div>
-            <!-- /category nav-->
-            <!-- menu nav-->
-            <div class="menu-nav"><span class="menu-header">Menu <i class="fa fa-bars"></i></span></div>
-            <!-- menu nav-->
-            <!-- /container-->
-        </div>
-    </div>
-</div>
-<div class="section">
-    <div class="container">
-        <?php /** @var string $content */
-        include_once $content?>
-    </div>
-</div>
-<footer class="section section-grey" id="footer">
-    <!-- container-->
-    <div class="container">
-        <!-- row-->
-        <div class="row">
-            <!-- footer widget-->
-            <div class="col-md-3 col-sm-6 col-xs-6">
-                <div class="footer">
-                    <!-- footer logo-->
-                    <div class="footer-logo"><a class="logo" href="#"><img src="<?=PUBLIC_URL?>site/img/logo.png" alt=""/></a></div>
-                    <!-- /footer logo-->
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna</p>
-                    <!-- footer social-->
-                    <ul class="footer-social">
-                        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                        <li><a href="#"><i class="fa fa-instagram"></i></a></li>
-                        <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-                        <li><a href="#"><i class="fa fa-pinterest"></i></a></li>
-                    </ul>
-                    <!-- /footer social-->
-                    <!-- /footer widget-->
-                    <!-- /row-->
-                </div>
-            </div>
-            <hr/>
-            <div class="row">
-                <div class="col-md-8 col-md-offset-2 text-center">
-                    <div class="footer-copyright">Copyright ©
-                        <script>
-                            document.write(new Date().getFullYear());
-                        </script>2019 All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
-<script src="<?=PUBLIC_URL?>site/js/jquery.min.js"></script>
-<script src="<?=PUBLIC_URL?>site/js/bootstrap.min.js"></script>
-<!-- <script src="<?=PUBLIC_URL?>site/js/slick.min.js"></script> -->
-<script src="<?=PUBLIC_URL?>site/js/nouislider.min.js"></script>
-<script src="<?=PUBLIC_URL?>site/js/jquery.zoom.min.js"></script>
-<script src="<?=PUBLIC_URL?>site/js/main.js"></script>
-</body>
+        </nav>
+    </header>
 
+    <?php
+    //require_once "_admin_sidebar.php";
+    ?>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-xs-12">
+                <?php /** @var string $content */
+                include_once $content?>
+            </div>
+        </div>
+    </div><!-- /.content-wrapper -->
+    <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+            <b>Version</b> 2.3.0
+        </div>
+        <strong>Copyright &copy; 2014-2015 <a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> All rights reserved.
+    </footer>
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Create the tabs -->
+        <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+            <li><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-home"></i></a></li>
+            <li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-gears"></i></a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <!-- Home tab content -->
+            <div class="tab-pane" id="control-sidebar-home-tab">
+                <h3 class="control-sidebar-heading">Recent Activity</h3>
+                <ul class="control-sidebar-menu">
+                    <li>
+                        <a href="javascript::;">
+                            <i class="menu-icon fa fa-birthday-cake bg-red"></i>
+                            <div class="menu-info">
+                                <h4 class="control-sidebar-subheading">Langdon's Birthday</h4>
+                                <p>Will be 23 on April 24th</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript::;">
+                            <i class="menu-icon fa fa-user bg-yellow"></i>
+                            <div class="menu-info">
+                                <h4 class="control-sidebar-subheading">Frodo Updated His Profile</h4>
+                                <p>New phone +1(800)555-1234</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript::;">
+                            <i class="menu-icon fa fa-envelope-o bg-light-blue"></i>
+                            <div class="menu-info">
+                                <h4 class="control-sidebar-subheading">Nora Joined Mailing List</h4>
+                                <p>nora@example.com</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript::;">
+                            <i class="menu-icon fa fa-file-code-o bg-green"></i>
+                            <div class="menu-info">
+                                <h4 class="control-sidebar-subheading">Cron Job 254 Executed</h4>
+                                <p>Execution time 5 seconds</p>
+                            </div>
+                        </a>
+                    </li>
+                </ul><!-- /.control-sidebar-menu -->
+
+                <h3 class="control-sidebar-heading">Tasks Progress</h3>
+                <ul class="control-sidebar-menu">
+                    <li>
+                        <a href="javascript::;">
+                            <h4 class="control-sidebar-subheading">
+                                Custom Template Design
+                                <span class="label label-danger pull-right">70%</span>
+                            </h4>
+                            <div class="progress progress-xxs">
+                                <div class="progress-bar progress-bar-danger" style="width: 70%"></div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript::;">
+                            <h4 class="control-sidebar-subheading">
+                                Update Resume
+                                <span class="label label-success pull-right">95%</span>
+                            </h4>
+                            <div class="progress progress-xxs">
+                                <div class="progress-bar progress-bar-success" style="width: 95%"></div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript::;">
+                            <h4 class="control-sidebar-subheading">
+                                Laravel Integration
+                                <span class="label label-warning pull-right">50%</span>
+                            </h4>
+                            <div class="progress progress-xxs">
+                                <div class="progress-bar progress-bar-warning" style="width: 50%"></div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript::;">
+                            <h4 class="control-sidebar-subheading">
+                                Back End Framework
+                                <span class="label label-primary pull-right">68%</span>
+                            </h4>
+                            <div class="progress progress-xxs">
+                                <div class="progress-bar progress-bar-primary" style="width: 68%"></div>
+                            </div>
+                        </a>
+                    </li>
+                </ul><!-- /.control-sidebar-menu -->
+
+            </div><!-- /.tab-pane -->
+            <!-- Stats tab content -->
+            <div class="tab-pane" id="control-sidebar-stats-tab">Stats Tab Content</div><!-- /.tab-pane -->
+            <!-- Settings tab content -->
+            <div class="tab-pane" id="control-sidebar-settings-tab">
+                <form method="post">
+                    <h3 class="control-sidebar-heading">General Settings</h3>
+                    <div class="form-group">
+                        <label class="control-sidebar-subheading">
+                            Report panel usage
+                            <input type="checkbox" class="pull-right" checked>
+                        </label>
+                        <p>
+                            Some information about this general settings option
+                        </p>
+                    </div><!-- /.form-group -->
+
+                    <div class="form-group">
+                        <label class="control-sidebar-subheading">
+                            Allow mail redirect
+                            <input type="checkbox" class="pull-right" checked>
+                        </label>
+                        <p>
+                            Other sets of options are available
+                        </p>
+                    </div><!-- /.form-group -->
+
+                    <div class="form-group">
+                        <label class="control-sidebar-subheading">
+                            Expose author name in posts
+                            <input type="checkbox" class="pull-right" checked>
+                        </label>
+                        <p>
+                            Allow the user to show his name in blog posts
+                        </p>
+                    </div><!-- /.form-group -->
+
+                    <h3 class="control-sidebar-heading">Chat Settings</h3>
+
+                    <div class="form-group">
+                        <label class="control-sidebar-subheading">
+                            Show me as online
+                            <input type="checkbox" class="pull-right" checked>
+                        </label>
+                    </div><!-- /.form-group -->
+
+                    <div class="form-group">
+                        <label class="control-sidebar-subheading">
+                            Turn off notifications
+                            <input type="checkbox" class="pull-right">
+                        </label>
+                    </div><!-- /.form-group -->
+
+                    <div class="form-group">
+                        <label class="control-sidebar-subheading">
+                            Delete chat history
+                            <a href="javascript::;" class="text-red pull-right"><i class="fa fa-trash-o"></i></a>
+                        </label>
+                    </div><!-- /.form-group -->
+                </form>
+            </div><!-- /.tab-pane -->
+        </div>
+    </aside><!-- /.control-sidebar -->
+    <!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+</div><!-- ./wrapper -->
+
+
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+    $.widget.bridge('uibutton', $.ui.button);
+</script>
+<!-- Bootstrap 3.3.5 -->
+<script src="<?=\config\DbConfig::$config['admin_public_url']?>bootstrap/js/bootstrap.min.js"></script>
+<!-- DataTables -->
+<script src="<?=\config\DbConfig::$config['admin_public_url']?>plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="<?=\config\DbConfig::$config['admin_public_url']?>plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- Morris.js charts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="<?=\config\DbConfig::$config['admin_public_url']?>plugins/morris/morris.min.js"></script>
+<!-- Sparkline -->
+<script src="<?=\config\DbConfig::$config['admin_public_url']?>plugins/sparkline/jquery.sparkline.min.js"></script>
+<!-- jvectormap -->
+<script src="<?=\config\DbConfig::$config['admin_public_url']?>plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
+<script src="<?=\config\DbConfig::$config['admin_public_url']?>plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+<!-- jQuery Knob Chart -->
+<script src="<?=\config\DbConfig::$config['admin_public_url']?>plugins/knob/jquery.knob.js"></script>
+<!-- daterangepicker -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
+<script src="<?=\config\DbConfig::$config['admin_public_url']?>plugins/daterangepicker/daterangepicker.js"></script>
+<!-- datepicker -->
+<script src="<?=\config\DbConfig::$config['admin_public_url']?>plugins/datepicker/bootstrap-datepicker.js"></script>
+<!-- Bootstrap WYSIHTML5 -->
+<script src="<?=\config\DbConfig::$config['admin_public_url']?>plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+<!-- Slimscroll -->
+<script src="<?=\config\DbConfig::$config['admin_public_url']?>plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="<?=\config\DbConfig::$config['admin_public_url']?>plugins/fastclick/fastclick.min.js"></script>
+<!-- AdminLTE App -->
+<script src="<?=\config\DbConfig::$config['admin_public_url']?>dist/js/app.min.js"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="<?=\config\DbConfig::$config['admin_public_url']?>dist/js/pages/dashboard.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="<?=\config\DbConfig::$config['admin_public_url']?>dist/js/demo.js"></script>
+</body>
 </html>

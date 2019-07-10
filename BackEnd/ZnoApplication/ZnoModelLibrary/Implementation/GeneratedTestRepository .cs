@@ -32,7 +32,7 @@ namespace Zno.DAL.Implementation
 
         public async Task<IEnumerable<GeneratedTest>> Find(Expression<Func<GeneratedTest, bool>> predicate)
         {
-            return await _context.GeneratedTests.Where(predicate).ToListAsync();
+            return await _context.GeneratedTests.Include(gt=>gt.Questions).Include(gt => gt.Answers).Where(predicate).ToListAsync();
         }
 
         public async Task<IEnumerable<GeneratedTest>> FindAll()
@@ -42,7 +42,7 @@ namespace Zno.DAL.Implementation
 
         public async Task<GeneratedTest> FindById(object id)
         {
-            return await _context.GeneratedTests.FirstOrDefaultAsync(s => s.Id == (int)id);
+            return await _context.GeneratedTests.Include(gt => gt.Questions).Include(gt => gt.Answers).Include(gt=>gt.User).FirstOrDefaultAsync(s => s.Id == (int)id);
         }
 
         public async Task Insert(GeneratedTest entity)

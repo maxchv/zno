@@ -25,8 +25,8 @@ namespace Zno.DAL.Entities
 
         public GeneratedTest()
         {
-            Answers = new List<UserAnswer>();
-            Questions = new List<Question>();
+            //Answers = new List<UserAnswer>();
+            //Questions = new List<Question>();
         }
     }
 }
