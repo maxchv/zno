@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Zno.DAL.Entities;
 using Zno.DAL.Interfaces;
@@ -79,6 +81,29 @@ namespace Zno.Server.Controllers
         }
 
         /// <summary>
+        /// Получение всех настроек теста
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAllTestSettings() {
+            try
+            {
+                var testSettings = await _unitOfWork.TestSettings.FindAll();
+                string json = JsonConvert.SerializeObject(testSettings, Formatting.Indented, new JsonSerializerSettings {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                });
+                json = json.Replace("\r\n", "");
+                return Ok(JsonConvert.DeserializeObject(json));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
         /// Создание настроек для теста по определенному предмету
         /// </summary>
         /// <param name="settings"></param>
@@ -90,11 +115,19 @@ namespace Zno.Server.Controllers
 
             try
             {
-                await _unitOfWork.TestSettings.Insert(settings);
-                await _unitOfWork.SaveChanges();
-                _unitOfWork.Commit();
+                var testSettings = await _unitOfWork.TestSettings.FindAll();
+                if (testSettings.ToList().Count < 1)
+                {
+                    await _unitOfWork.TestSettings.Insert(settings);
+                    await _unitOfWork.SaveChanges();
+                    _unitOfWork.Commit();
 
-                return Ok();
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest("Test must be one");
+                }
             }
             catch (Exception ex)
             {

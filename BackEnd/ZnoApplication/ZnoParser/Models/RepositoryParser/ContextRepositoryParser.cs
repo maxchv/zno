@@ -149,6 +149,20 @@ namespace Zno.Parser.Models.RepositoryParser
                         ctx.SaveChanges();
                     }
 
+                    foreach(var answer in question.HtmlAnswers)
+                    {
+                        Answer answerEF = new Answer();
+                        answerEF.ContentType = GetContentType(answer.HtmlContentType);
+                        answerEF.Content = answer.Content;
+                        answerEF.Question = questionEF;
+                        answerEF.RightAnswer = answer.IsRight;
+                        lock (ctx)
+                        {
+                            ctx.Answers.Add(answerEF);
+                            ctx.SaveChanges();
+                        }
+                    }
+
                 }
                 catch (Exception ex)
                 {

@@ -8,7 +8,7 @@ namespace ZnoParserConsoleApp
     {
         static void Main(string[] args)
         {
-            ZnoParser parser = new ZnoParser("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=ZnoDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+            ZnoParser parser = new ZnoParser("server=localhost;port=3306;userid=root;password=;database=zno;");
             parser.SerializeParser = new XmlSerializableParser("parser.xml");
             parser.StartParsing();
             Console.WriteLine("Add comleted");

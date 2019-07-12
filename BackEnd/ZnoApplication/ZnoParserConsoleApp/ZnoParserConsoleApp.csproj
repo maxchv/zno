@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ZnoModelLibrary\Zno.DAL.csproj" />
     <ProjectReference Include="..\ZnoParser\Zno.Parser.csproj" />
   </ItemGroup>

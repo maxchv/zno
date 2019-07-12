@@ -29,8 +29,8 @@ namespace Zno.Parser.Models.QuestionsParserImpl
         public void InitByHtmlNode(HtmlNode textNode)
         {
             ContentType = HtmlContentType.String;
-            //if (textNode.FirstChild.Name == "#text") {
-            var nextNode = textNode;
+
+            /*var nextNode = textNode;
             do
             {
                 string data = nextNode.InnerText;
@@ -38,8 +38,11 @@ namespace Zno.Parser.Models.QuestionsParserImpl
                 data = Regex.Replace(data, "\n", "");
                 Data += data == "" ? "" : data + "\n\r";
                 nextNode = nextNode.NextSibling;
-            } while (nextNode != null);
-            //}
+            } while (nextNode != null);*/
+
+            Data = textNode.InnerHtml;
+            Data = Regex.Replace(Data, "\r", "");
+            Data = Regex.Replace(Data, "\n", "");
         }
 
         public HtmlContentType GetContentType()

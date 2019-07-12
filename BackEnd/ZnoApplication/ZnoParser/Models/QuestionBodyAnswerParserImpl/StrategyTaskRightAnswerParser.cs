@@ -10,17 +10,17 @@ namespace Zno.Parser.Models.QuestionBodyAnswerParserImpl
     {
         public List<HtmlAnswer> GetAnswers()
         {
-            throw new NotImplementedException();
+            return new List<HtmlAnswer>();
         }
 
         public string GetJsonAnswer()
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public void InitByHtmlNode(HtmlNode node)
         {
-            throw new NotImplementedException();
+            
         }
     }
 }

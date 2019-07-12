@@ -19,6 +19,7 @@ namespace Zno.Parser.Helpers
                     break;
                 case HtmlContentType.Image:
                 case HtmlContentType.Video:
+                case HtmlContentType.Json:
                     id = 1; // Json
                     break;
                 case HtmlContentType.None:

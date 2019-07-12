@@ -104,7 +104,7 @@ namespace Zno.Server.Controllers
                     await _roleManager.CreateRoleAsync("User");
                     await _userManager.AddToRoleAsync(newUser, "User");
 
-                    return Ok();
+                    return Ok(true);
                 }
 
                 StringBuilder builder = new StringBuilder();
@@ -277,7 +277,7 @@ namespace Zno.Server.Controllers
         /// Выход из системы
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> Logout()
         {
             try
@@ -304,6 +304,24 @@ namespace Zno.Server.Controllers
                 var userRoles = await _userManager.GetRolesAsync(currentUser);
 
                 return Ok(userRoles);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        
+        [HttpGet]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            try
+            {
+                var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+                var userRoles = await _userManager.GetRolesAsync(currentUser);
+
+                object user = new { email = currentUser.Email, userName = currentUser.UserName, userRoles = userRoles.ToArray() };
+                return Ok(user);
             }
             catch (Exception ex)
             {
